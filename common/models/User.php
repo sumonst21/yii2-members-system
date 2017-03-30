@@ -24,8 +24,9 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
+    const STATUS_PENDING = 5;
     const STATUS_ACTIVE = 10;
-
+    const STATUS_BANNED = 99;
 
     /**
      * @inheritdoc
@@ -51,8 +52,22 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['username', 'filter', 'filter' => 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'string', 'min' => 4, 'max' => 20],
+
+            ['email', 'filter', 'filter' => 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+
+            [['created_at', 'updated_at'], 'integer'],
+
+            ['status', 'integer'],
+            ['status', 'default', 'value' => User::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [User::STATUS_ACTIVE, User::STATUS_DELETED, User::STATUS_PENDING, User::STATUS_BANNED]],
         ];
     }
 
@@ -69,7 +84,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['access_token' => $token]);
     }
 
     /**
@@ -185,5 +200,99 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    // ----- Added -----
+
+    /**
+     * Generates a validation token for validation required signup
+     */
+    public function generateValidationToken()
+    {
+        $this->validation_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
+     * Removes a validation token for validation required signup
+     */
+    public function removeValidationToken()
+    {
+        $this->validation_token = null;
+    }
+
+    /**
+     * Finds pending user by validation token
+     *
+     * @param string $token account validation token
+     * @return static|null
+     */
+    public static function findByValidationToken($token)
+    {
+        return static::findOne([
+            'validation_token' => $token,
+            'status' => self::STATUS_PENDING,
+        ]);
+    }
+
+    /**
+     * Get a user's related profile
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Find an identity by ID and does not matter what their status is
+     */
+    public static function findAnyIdentity($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+
+    /**
+     * Finds user by email
+     *
+     * @param string $email
+     * @return static|null
+     */
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
+    /**
+     * Helper function to map User Status constants to name
+     */
+    public static function getUserStatusConst($key = null)
+    {
+        if ( $key !== null ) {
+            $array = self::getUserStatusConst();
+            return $array[$key];
+        }
+
+        return [
+            self::STATUS_DELETED => 'Deleted',
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_BANNED => 'Banned'
+        ];
+    }
+
+    /**
+     * Get User Status for DetailView
+     */
+    public function getUserStatus() {
+        return self::getUserStatusConst($this->status);
+    }
+
+    /**
+     * Get User Status array for drop down menu
+     */
+    public function getUserStatusDropdown()
+    {
+        return self::getUserStatusConst();
     }
 }

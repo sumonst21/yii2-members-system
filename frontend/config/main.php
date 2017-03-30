@@ -8,10 +8,11 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
-    'name' => 'Town & Country Homecenter',
+    'name' => 'Yii2 Members System',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'bootstrap' => ['log'],
+    'modules' => [],
     'components' => [
         'assetManager' => [
             'bundles' => false,
@@ -20,6 +21,7 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
+            'class' => 'common\components\User',       // extend User component
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],

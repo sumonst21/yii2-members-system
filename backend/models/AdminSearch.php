@@ -19,7 +19,7 @@ class AdminSearch extends Admin
     {
         return [
             [['id', 'status', 'role', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'nicename', 'email', 'auth_key', 'password_hash', 'password_reset_token'], 'safe'],
+            [['username', 'firstname', 'lastname', 'email', 'auth_key', 'password_hash', 'password_reset_token'], 'safe'],
         ];
     }
 
@@ -64,7 +64,8 @@ class AdminSearch extends Admin
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'nicename', $this->nicename])
+            ->andFilterWhere(['like', 'firstname', $this->firstname])
+            ->andFilterWhere(['like', 'lastname', $this->lastname])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'auth_key', $this->auth_key])
             ->andFilterWhere(['like', 'password_hash', $this->password_hash])

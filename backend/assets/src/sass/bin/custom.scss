@@ -1,0 +1,25 @@
+$grey-background: #d2d6de;
+$white-background: #fff;
+
+.no-sidebar {
+  background: $grey-background;
+}
+
+.single-page-content {
+  margin: 7% auto;
+  max-width: 600px;
+
+  h1 {
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .center-box {
+    background: $white-background;
+    padding: 20px;
+  }
+}
+
+.alert {
+  margin-bottom: 10px;
+}

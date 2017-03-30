@@ -1,5 +1,19 @@
 module.exports = function (grunt) {
+
+    require('time-grunt')(grunt);
+    require('jit-grunt')(grunt);
+
     grunt.initConfig({
+        package: grunt.file.readJSON('package.json'),
+        bump: {
+            options: {
+                files: ['package.json',],
+                updateConfigs: ['package'],
+                commit: false,
+                createTag: false,
+                push: false
+            }
+        },
         less: {
             backend: {
                 files: {
@@ -115,7 +129,7 @@ module.exports = function (grunt) {
                 files: {
                     'mainsite/web/assets/css/stylesheet.min.css': grunt.file.readJSON('mainsite/assets/stylesheet.json')
                 }
-            },
+            }
         },
         uglify: {
             options: {
@@ -135,7 +149,7 @@ module.exports = function (grunt) {
                 files: {
                     'mainsite/web/assets/js/scripts.min.js': grunt.file.readJSON('mainsite/assets/javascript.json')
                 }
-            },
+            }
         },
         copy: {
             backend: {
@@ -210,27 +224,25 @@ module.exports = function (grunt) {
         }
     });
 
-    // Plugin loading
-    grunt.loadNpmTasks('grunt-typescript');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-sass');
-    grunt.loadNpmTasks('grunt-sass-import');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-
     // Task definition
     grunt.registerTask('build', ['less', 'sass_import', 'sass', 'typescript', 'concat', 'cssmin', 'uglify', 'copy']);
-    grunt.registerTask('build-backend', ['less:backend', 'sass_import:backend', 'sass:backend', 'typescript:backend', 'concat:backend', 'cssmin:backend', 'uglify:backend', 'copy:backend']);
-    grunt.registerTask('build-frontend', ['less:frontend', 'sass_import:frontend', 'sass:frontend', 'typescript:frontend', 'concat:frontend', 'cssmin:frontend', 'uglify:frontend', 'copy:frontend']);
-    grunt.registerTask('build-mainsite', ['less:mainsite', 'sass_import:mainsite', 'sass:mainsite', 'typescript:mainsite', 'concat:mainsite', 'cssmin:mainsite', 'uglify:mainsite', 'copy:mainsite']);
+    grunt.registerTask('build:backend', ['less:backend', 'sass_import:backend', 'sass:backend', 'typescript:backend', 'concat:backend', 'cssmin:backend', 'uglify:backend', 'copy:backend']);
+    grunt.registerTask('build:frontend', ['less:frontend', 'sass_import:frontend', 'sass:frontend', 'typescript:frontend', 'concat:frontend', 'cssmin:frontend', 'uglify:frontend', 'copy:frontend']);
+    grunt.registerTask('build:mainsite', ['less:mainsite', 'sass_import:mainsite', 'sass:mainsite', 'typescript:mainsite', 'concat:mainsite', 'cssmin:mainsite', 'uglify:mainsite', 'copy:mainsite']);
 
     grunt.registerTask('clean', ['clean:backend', 'clean:frontend', 'clean:mainsite']);
     grunt.registerTask('reset-yii', ['clean:reset_yii']);
+
+    grunt.registerTask('version-bump', function(key) {
+        key = (typeof key === 'undefined') ? '' : ':' + key;
+        grunt.task.run('bump' + key);
+        grunt.task.run('update-version-file');
+    });
+
+    grunt.registerTask('update-version-file', function() {
+        grunt.file.write('VERSION', grunt.config.get('package').version);
+        grunt.log.ok('VERSION file updated');
+    });
 
     grunt.registerTask('backup', ['compress']);
 };

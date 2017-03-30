@@ -1,6 +1,6 @@
 {
   "name": "yii2-members-system",
-  "version": "3.0.5",
+  "version": "2.0.0",
   "description": "Yii2 Members System",
   "repository": {
     "type": "git",
@@ -23,9 +23,7 @@
     "grunt-sass-import": "^0.2.2",
     "grunt-typescript": "^0.8.0",
     "jit-grunt": "^0.10.0",
-    "load-grunt-configs": "^1.0.0",
-    "load-grunt-tasks": "^3.5.2",
-    "matchdep": "^1.0.1",
+    "time-grunt": "^1.4.0",
     "typescript": "^2.2.1"
   },
   "scripts": {

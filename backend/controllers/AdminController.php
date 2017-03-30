@@ -35,7 +35,6 @@ class AdminController extends BaseController
                     ],
                 ],
             ],
-
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

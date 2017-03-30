@@ -1,70 +1,49 @@
 <?php
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \common\models\LoginForm */
 
-$this->title = 'Sign In';
+use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
 
-$fieldOptions1 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-envelope form-control-feedback'></span>"
-];
-
-$fieldOptions2 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-lock form-control-feedback'></span>"
-];
+$this->title = 'Admin Login';
 ?>
+<div class="container site-login">
+    <div class="single-page-content">
 
-<div class="login-box">
-    <div class="login-logo">
-        <a href="#"><b>Admin</b>LTE</a>
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+        <h1><?= Html::encode($this->title) ?></h1>
 
-        <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
+        <?= \common\components\Helper::renderFlashMessages() ?>
 
-        <?= $form
-            ->field($model, 'username', $fieldOptions1)
-            ->label(false)
-            ->textInput(['placeholder' => $model->getAttributeLabel('username')]) ?>
+        <div class="center-box">
 
-        <?= $form
-            ->field($model, 'password', $fieldOptions2)
-            ->label(false)
-            ->passwordInput(['placeholder' => $model->getAttributeLabel('password')]) ?>
+            <div class="row">
+                <div class="col-lg-12">
+                    <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-        <div class="row">
-            <div class="col-xs-8">
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+
+                        <?= $form->field($model, 'password')->passwordInput() ?>
+
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                            </div>
+                            <div class="col-xs-4">
+                                <?= Html::submitButton('Sign in', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                            </div>
+                        </div>
+
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
-            <!-- /.col -->
-            <div class="col-xs-4">
-                <?= Html::submitButton('Sign in', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+
+            <div class="row">
+                &nbsp;
             </div>
-            <!-- /.col -->
+
         </div>
 
-
-        <?php ActiveForm::end(); ?>
-
-        <div class="social-auth-links text-center">
-            <p>- OR -</p>
-            <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in
-                using Facebook</a>
-            <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign
-                in using Google+</a>
-        </div>
-        <!-- /.social-auth-links -->
-
-        <a href="#">I forgot my password</a><br>
-        <a href="register.html" class="text-center">Register a new membership</a>
-
     </div>
-    <!-- /.login-box-body -->
-</div><!-- /.login-box -->
+</div>

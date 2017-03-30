@@ -30,11 +30,12 @@ class ChangePasswordForm extends Model
      */
     public function __construct($id, $config = [])
     {
-
         $this->_user = Admin::findIdentity($id);
+
         if (!$this->_user) {
             throw new InvalidParamException('Unable to find admin!');
         }
+
         $this->id = $this->_user->id;
         parent::__construct($config);
     }

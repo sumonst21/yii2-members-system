@@ -1,5 +1,5 @@
 <?php
-namespace frontend\tests;
+namespace mainsite\tests;
 
 /**
  * Inherited Methods

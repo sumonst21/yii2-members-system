@@ -10,8 +10,9 @@ use Yii;
  */
 class CreateAdminForm extends Admin
 {
-    public $nicename;
     public $username;
+    public $firstname;
+    public $lastname;
     public $email;
     public $password;
     public $role;
@@ -28,9 +29,8 @@ class CreateAdminForm extends Admin
             ['username', 'unique', 'targetClass' => '\backend\models\Admin', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 4, 'max' => 20],
 
-            ['nicename', 'filter', 'filter' => 'trim'],
-            ['nicename', 'required'],
-            ['nicename', 'string', 'min' => 4, 'max' => 30],
+            [['firstname', 'lastname'], 'filter', 'filter' => 'trim'],
+            [['firstname', 'lastname'], 'string', 'max' => 30],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
@@ -41,15 +41,18 @@ class CreateAdminForm extends Admin
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
 
+            ['status', 'required'],
+            ['status', 'integer'],
+            ['status', 'default', 'value' => Admin::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [Admin::STATUS_DELETED, Admin::STATUS_ACTIVE, Admin::STATUS_BANNED]],
+
             ['role', 'required'],
             ['role', 'integer'],
             ['role', 'default', 'value' => Admin::ROLE_ADMIN],
             ['role', 'in', 'range' => [Admin::ROLE_ROOT, Admin::ROLE_SUPER, Admin::ROLE_ADMIN]],
 
-            ['status', 'required'],
-            ['status', 'integer'],
-            ['status', 'default', 'value' => Admin::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [Admin::STATUS_DELETED, Admin::STATUS_ACTIVE, Admin::STATUS_BANNED]],
+            // handle annoying update action, setting our null columns to empty string
+            [['firstname', 'lastname'], 'default', 'value' => null],
         ];
     }
 
@@ -60,15 +63,18 @@ class CreateAdminForm extends Admin
      */
     public function createAdmin()
     {
-        if ($this->validate()) {
+        if ($this->validate())
+        {
             $admin = new Admin();
-            $admin->nicename = $this->nicename;
+            $admin->firstname = $this->firstname;
+            $admin->lastname = $this->lastname;
             $admin->username = $this->username;
             $admin->email = $this->email;
             $admin->role = $this->role;
             $admin->status = $this->status;
             $admin->setPassword($this->password);
             $admin->generateAuthKey();
+
             if ($admin->save()) {
                 return $admin;
             }

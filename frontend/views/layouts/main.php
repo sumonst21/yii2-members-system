@@ -1,16 +1,18 @@
 <?php
-use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$directoryAsset = Yii::getAlias('@web/themes/adminlte');
+use yii\helpers\Html;
+
+$directoryAsset = Yii::getAlias('@web/assets/themes/adminlte');
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
 
@@ -18,7 +20,7 @@ $directoryAsset = Yii::getAlias('@web/themes/adminlte');
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <!-- START GRUNT HANDLING -->
-    <?= Html::cssFile(YII_DEBUG ? '@web/css/stylesheet.css' : '@web/css/stylesheet.min.css?v=' . filemtime(Yii::getAlias('@webroot/css/stylesheet.min.css'))) ?>
+    <?= Html::cssFile(YII_DEBUG ? '@web/assets/css/stylesheet.css' : '@web/assets/css/stylesheet.min.css?v=' . filemtime(Yii::getAlias('@webroot/assets/css/stylesheet.min.css'))) ?>
     <!-- END GRUNT HANDLING -->
 
     <title><?= Html::encode($this->title) ?></title>
@@ -31,18 +33,18 @@ $directoryAsset = Yii::getAlias('@web/themes/adminlte');
     <div class="wrapper">
 
         <?= $this->render(
-            'header.php',
+            '_header.php',
             ['directoryAsset' => $directoryAsset]
         ) ?>
 
         <?= $this->render(
-            'left.php',
+            '_left.php',
             ['directoryAsset' => $directoryAsset]
         )
         ?>
 
         <?= $this->render(
-            'content.php',
+            '_content.php',
             ['content' => $content, 'directoryAsset' => $directoryAsset]
         ) ?>
 
@@ -52,7 +54,7 @@ $directoryAsset = Yii::getAlias('@web/themes/adminlte');
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- START GRUNT HANDLING -->
-    <?= Html::jsFile(YII_DEBUG ? '@web/js/scripts.js' : '@web/js/scripts.min.js?v=' . filemtime(Yii::getAlias('@webroot/js/scripts.min.js'))) ?>
+    <?= Html::jsFile(YII_DEBUG ? '@web/assets/js/scripts.js' : '@web/assets/js/scripts.min.js?v=' . filemtime(Yii::getAlias('@webroot/assets/js/scripts.min.js'))) ?>
     <!-- END GRUNT HANDLING -->
 
 <?php $this->endBody() ?>

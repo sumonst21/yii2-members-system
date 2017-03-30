@@ -21,7 +21,6 @@ class ChangeUserPasswordForm extends Model
      */
     private $_user;
 
-
     /**
      * Creates a form model given a token.
      *
@@ -31,11 +30,12 @@ class ChangeUserPasswordForm extends Model
      */
     public function __construct($id, $config = [])
     {
-
         $this->_user = User::findIdentity($id);
+
         if (!$this->_user) {
             throw new InvalidParamException('Unable to find user!');
         }
+
         $this->id = $this->_user->id;
         $this->username = $this->_user->username;
         parent::__construct($config);

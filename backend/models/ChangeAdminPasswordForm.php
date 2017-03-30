@@ -1,10 +1,10 @@
 <?php
 namespace backend\models;
 
+use Yii;
 use backend\models\Admin;
 use yii\base\InvalidParamException;
 use yii\base\Model;
-use Yii;
 
 /**
  * Change Admin password form
@@ -21,7 +21,6 @@ class ChangeAdminPasswordForm extends Model
      */
     private $_user;
 
-
     /**
      * Creates a form model given a token.
      *
@@ -31,11 +30,12 @@ class ChangeAdminPasswordForm extends Model
      */
     public function __construct($id, $config = [])
     {
-
         $this->_user = Admin::findIdentity($id);
+
         if (!$this->_user) {
             throw new InvalidParamException('Unable to find admin!');
         }
+
         $this->id = $this->_user->id;
         $this->username = $this->_user->username;
         parent::__construct($config);

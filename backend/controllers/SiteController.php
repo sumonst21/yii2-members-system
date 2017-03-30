@@ -74,7 +74,7 @@ class SiteController extends BaseController
             return $this->goHome();
         }
 
-        $this->layout = '//main-login';
+        $this->layout = '//no-sidebar';
 
         $model = new AdminLoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
