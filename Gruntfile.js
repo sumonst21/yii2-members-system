@@ -236,12 +236,6 @@ module.exports = function (grunt) {
     grunt.registerTask('version-bump', function(key) {
         key = (typeof key === 'undefined') ? '' : ':' + key;
         grunt.task.run('bump' + key);
-        grunt.task.run('update-version-file');
-    });
-
-    grunt.registerTask('update-version-file', function() {
-        grunt.file.write('VERSION', grunt.config.get('package').version);
-        grunt.log.ok('VERSION file updated');
     });
 
     grunt.registerTask('backup', ['compress']);
