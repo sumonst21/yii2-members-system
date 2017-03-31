@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a0376766f9730448897ec586db09038",
+    "content-hash": "9cdb8583ab28521b4ecedc7db2d6fa10",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -346,16 +346,16 @@
         },
         {
             "name": "dmstr/yii2-adminlte-asset",
-            "version": "2.4.0",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-adminlte-asset.git",
-                "reference": "b34bdc251df6ceeecab6eebf129e5cc58d233944"
+                "reference": "b339611f9f34621d731d3feca3a83b42720c7d5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-adminlte-asset/zipball/b34bdc251df6ceeecab6eebf129e5cc58d233944",
-                "reference": "b34bdc251df6ceeecab6eebf129e5cc58d233944",
+                "url": "https://api.github.com/repos/dmstr/yii2-adminlte-asset/zipball/b339611f9f34621d731d3feca3a83b42720c7d5c",
+                "reference": "b339611f9f34621d731d3feca3a83b42720c7d5c",
                 "shasum": ""
             },
             "require": {
@@ -402,7 +402,7 @@
                 "theme",
                 "yii2"
             ],
-            "time": "2017-03-24T11:36:51+00:00"
+            "time": "2017-03-30T09:04:16+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -498,54 +498,6 @@
                 "icon"
             ],
             "time": "2016-10-24T15:52:54+00:00"
-        },
-        {
-            "name": "himiklab/yii2-recaptcha-widget",
-            "version": "1.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/himiklab/yii2-recaptcha-widget.git",
-                "reference": "6c7c6c41a595f8fdcc5ec54e5f09a332ef0358cc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/himiklab/yii2-recaptcha-widget/zipball/6c7c6c41a595f8fdcc5ec54e5f09a332ef0358cc",
-                "reference": "6c7c6c41a595f8fdcc5ec54e5f09a332ef0358cc",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "*"
-            },
-            "require-dev": {
-                "phpunit/dbunit": ">=1.2",
-                "phpunit/phpunit": ">=3.7",
-                "phpunit/phpunit-selenium": ">=1.2"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "himiklab\\yii2\\recaptcha\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "HimikLab",
-                    "homepage": "https://github.com/himiklab/"
-                }
-            ],
-            "description": "Yii2 Google reCAPTCHA widget",
-            "keywords": [
-                "captcha",
-                "google",
-                "recaptcha",
-                "widget",
-                "yii2"
-            ],
-            "time": "2017-01-10T15:46:29+00:00"
         },
         {
             "name": "rmrevin/yii2-fontawesome",

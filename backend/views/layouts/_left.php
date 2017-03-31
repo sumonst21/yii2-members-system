@@ -38,24 +38,24 @@ use backend\models\Admin;
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
                     ['label' => 'Menu', 'options' => ['class' => 'header']],
-                    ['label' => 'Gii', 'icon' => 'fa fa-file-code-o', 'url' => ['/gii'], 'visible' => (Yii::$app->user->role === Admin::ROLE_ROOT)],
-                    ['label' => 'Debug', 'icon' => 'fa fa-dashboard', 'url' => ['/debug'], 'visible' => (Yii::$app->user->role === Admin::ROLE_ROOT)],
+                    ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'], 'visible' => YII_DEBUG],
+                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'], 'visible' => YII_DEBUG],
                     [
                         'label' => 'Admins',
-                        'icon' => 'fa fa-share',
+                        'icon' => 'share',
                         'url' => '#',
                         'items' => [
-                            ['label' => 'Overview', 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/index']],
-                            ['label' => 'Create', 'icon' => 'fa fa-file-code-o', 'url' => ['/admin/create']],
+                            ['label' => 'Overview', 'icon' => 'file-code-o', 'url' => ['/admin/index']],
+                            ['label' => 'Create', 'icon' => 'file-code-o', 'url' => ['/admin/create']],
                         ],
                     ],
                     [
                         'label' => 'Users',
-                        'icon' => 'fa fa-share',
+                        'icon' => 'share',
                         'url' => '#',
                         'items' => [
-                            ['label' => 'Overview', 'icon' => 'fa fa-file-code-o', 'url' => ['/user/index']],
-                            ['label' => 'Create', 'icon' => 'fa fa-file-code-o', 'url' => ['/user/create']],
+                            ['label' => 'Overview', 'icon' => 'file-code-o', 'url' => ['/user/index']],
+                            ['label' => 'Create', 'icon' => 'file-code-o', 'url' => ['/user/create']],
                         ],
                     ],
                 ],

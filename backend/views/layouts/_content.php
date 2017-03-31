@@ -40,10 +40,9 @@ use dmstr\widgets\Alert;
 
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
-        <b>Version</b> 2.0
+        <b>Version</b> <?= Yii::$app->version ?>
     </div>
-    <strong>Copyright &copy; <?= date('Y') ?> <?= Yii::$app->name ?>.</strong> All rights
-    reserved.
+    <strong>Copyright &copy; <?= date('Y') ?> <?= Yii::$app->name ?>.</strong> All rights reserved.
 </footer>
 
 <!-- Control Sidebar -->

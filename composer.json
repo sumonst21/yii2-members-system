@@ -1,25 +1,21 @@
 {
-    "name": "yiisoft/yii2-app-advanced",
-    "description": "Yii 2 Advanced Project Template",
-    "keywords": ["yii2", "framework", "advanced", "project template"],
-    "homepage": "http://www.yiiframework.com/",
+    "name": "wadeshuler/yii2-members-system",
+    "description": "Member System based on the Yii2 framework",
+    "keywords": ["yii2-members-system", "yii2 members system", "yii2 member system", "members system", "member system", "yii2", "framework", "advanced", "project template"],
+    "homepage": "https://github.com/wadeshuler/yii2-members-system",
     "type": "project",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
-        "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "http://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii2"
+        "issues": "https://github.com/wadeshuler/yii2-members-system/issues?state=open",
+        "source": "https://github.com/wadeshuler/yii2-members-system"
     },
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.6",
+        "yiisoft/yii2": "~2.0.11",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "dmstr/yii2-adminlte-asset": "2.*",
-        "himiklab/yii2-recaptcha-widget" : "*"
+        "dmstr/yii2-adminlte-asset": "2.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

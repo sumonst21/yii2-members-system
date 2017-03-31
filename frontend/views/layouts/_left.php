@@ -39,11 +39,11 @@ use yii\helpers\Url;
                     ['label' => 'Menu', 'options' => ['class' => 'header']],
                     [
                         'label' => 'User',
-                        'icon' => 'fa fa-share',
+                        'icon' => 'share',
                         'url' => '#',
                         'items' => [
-                            ['label' => 'Profile', 'icon' => 'fa fa-file-code-o', 'url' => ['/user/index']],
-                            ['label' => 'Settings', 'icon' => 'fa fa-dashboard', 'url' => ['/user/settings']],
+                            ['label' => 'Profile', 'icon' => 'file-code-o', 'url' => ['/user/index']],
+                            ['label' => 'Settings', 'icon' => 'dashboard', 'url' => ['/user/settings']],
                         ],
                     ],
                 ],
