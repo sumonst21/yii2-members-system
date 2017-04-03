@@ -1,10 +1,10 @@
 <?php
 namespace backend\models;
 
-use backend\models\Admin;
+use Yii;
 use yii\base\InvalidParamException;
 use yii\base\Model;
-use Yii;
+use backend\models\Admin;
 
 /**
  * Change password form for current admin user only
@@ -13,6 +13,7 @@ class ChangePasswordForm extends Model
 {
     public $id;
     public $password;
+    public $new_password;
     public $confirm_password;
 
     /**
@@ -46,9 +47,9 @@ class ChangePasswordForm extends Model
     public function rules()
     {
         return [
-            [['password','confirm_password'], 'required'],
-            [['password','confirm_password'], 'string', 'min' => 6],
-            ['confirm_password', 'compare', 'compareAttribute' => 'password'],
+            [['password', 'new_password','confirm_password'], 'required'],
+            [['password', 'new_password','confirm_password'], 'string', 'min' => 6],
+            ['confirm_password', 'compare', 'compareAttribute' => 'new_password'],
         ];
     }
 
@@ -60,8 +61,17 @@ class ChangePasswordForm extends Model
     public function changePassword()
     {
         $user = $this->_user;
-        $user->setPassword($this->password);
+        $user->setPassword($this->new_password);
 
-        return $user->save(false);
+        return $user->save();
+    }
+
+    public function resetForm()
+    {
+        $this->password = null;
+        $this->new_password = null;
+        $this->confirm_password = null;
+
+        return true;
     }
 }

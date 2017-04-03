@@ -7,13 +7,15 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = 'Change Password (' . $model->username . ')';
+$this->title = 'Change Password';
 ?>
 <div class="user-changePassword">
 
     <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
+
+        <?= $form->field($model, 'new_password')->passwordInput() ?>
 
         <?= $form->field($model, 'confirm_password')->passwordInput() ?>
 

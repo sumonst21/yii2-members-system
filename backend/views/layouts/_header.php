@@ -259,7 +259,7 @@ use yii\helpers\Url;
                             <div class="pull-left">
                                 <?= Html::a(
                                     'Profile',
-                                    ['/admin/view', 'id' => Yii::$app->user->id],
+                                    ['/admin/profile'],
                                     ['class' => 'btn btn-default btn-flat']
                                 ) ?>
                             </div>

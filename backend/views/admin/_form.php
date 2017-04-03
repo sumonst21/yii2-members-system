@@ -34,7 +34,20 @@ use backend\models\Admin;
             ['prompt'=>' - Admin Status - ']
         ) ?>
 
-        <?= (!$model->isNewRecord) ? Html::a('Change Password!', ['admin/change-admin-password', 'id' => $model->id]) . '<br /><br />' : '' ?>
+        <?php
+        if ( ! $model->isNewRecord )
+        {
+            if ($model->id === Yii::$app->user->id) {
+                echo Html::a('Change Password', ['admin/change-password']);
+            } else {
+                echo Html::a('Change Password', ['admin/change-admin-password', 'id' => $model->id]);
+            }
+        }
+        ?>
+
+        <div class="row">
+            &nbsp;
+        </div>
 
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

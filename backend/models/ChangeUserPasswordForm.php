@@ -63,6 +63,14 @@ class ChangeUserPasswordForm extends Model
         $user = $this->_user;
         $user->setPassword($this->password);
 
-        return $user->save(false);
+        return $user->save();
+    }
+
+    public function resetForm()
+    {
+        $this->password = null;
+        $this->confirm_password = null;
+
+        return true;
     }
 }

@@ -150,6 +150,19 @@ class AdminController extends BaseController
     }
 
     /**
+     * Show current admin profile
+     * @return mixed
+     */
+    public function actionProfile()
+    {
+        $model = $this->findModel(Yii::$app->user->id);
+
+        return $this->render('profile', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
      * Change current Admin user's password.
      *
      * @return mixed
@@ -166,7 +179,7 @@ class AdminController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
         {
             Yii::$app->session->setFlash('success', 'Password Changed!');
-            return $this->goHome();
+            $model->resetForm();
         }
 
         return $this->render('changePassword', [
@@ -192,7 +205,7 @@ class AdminController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
         {
             Yii::$app->session->setFlash('success', 'Password Changed!');
-            return $this->goHome();
+            $model->resetForm();
         }
 
         return $this->render('changeAdminPassword', [

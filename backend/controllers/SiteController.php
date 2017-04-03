@@ -93,8 +93,9 @@ class SiteController extends BaseController
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-        Yii::$app->session->setFlash('success', 'You have been logged out!');
+        if (Yii::$app->user->logout()) {
+            Yii::$app->session->setFlash('success', 'You have been logged out!');
+        }
 
         return $this->goHome();
     }

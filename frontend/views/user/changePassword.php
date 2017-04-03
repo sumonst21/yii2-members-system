@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->errorSummary($model); ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($model, 'new_password')->passwordInput() ?>
         <?= $form->field($model, 'confirm_password')->passwordInput() ?>
 
         <div class="form-group">

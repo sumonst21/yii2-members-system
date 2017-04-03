@@ -188,8 +188,10 @@ class UserController extends BaseController
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
+        {
             Yii::$app->session->setFlash('success', 'Password Changed!');
+            $model->resetForm();
         }
 
         return $this->render('changePassword', [

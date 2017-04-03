@@ -157,7 +157,7 @@ class UserController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
         {
             Yii::$app->session->setFlash('success', 'Password Changed!');
-            return $this->goHome();
+            $model->resetForm();
         }
 
         return $this->render('changeUserPassword', [
