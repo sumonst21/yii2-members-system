@@ -10,6 +10,22 @@ This project is not complete yet. It currently is for my own personal use.
 
 ---
 
+### Demo
+
+You can see it here:
+
+[http://yii2memberssystem-wadeshuler.rhcloud.com](http://yii2memberssystem-wadeshuler.rhcloud.com)
+
+[http://yii2memberssystem-wadeshuler.rhcloud.com/members](http://yii2memberssystem-wadeshuler.rhcloud.com/members)
+
+[http://yii2memberssystem-wadeshuler.rhcloud.com/admin](http://yii2memberssystem-wadeshuler.rhcloud.com/admin)
+
+**Please Note:** The demo is just an example. I have "members" as a symbolic link from `/mainsite/web/members` pointing to `/frontend/web` and a symbolic link from `/mainsite/web/admin` pointing to `/backend/web`. These symbolic links are not included and are created during my OpenShift action hooks. So unless you push to OpenShift, they won't work. You will need to create your own symbolic links, or you can point sub-domains to the web directories.
+
+I have `mainsite` as the main homepage (ie: www.site.com). Then you could create a `users` sub-domain and point it to `/frontend/web` and an `admin` sub-domain pointed to `/backend/web`.
+
+---
+
 ### Features
 
 - Grunt asset handling (and other helpful commands to backup, reset yii, etc)
