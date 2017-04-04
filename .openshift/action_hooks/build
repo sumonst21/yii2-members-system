@@ -11,3 +11,6 @@
 #if [ -f ${OPENSHIFT_REPO_DIR}.openshift/config/.htaccess ]; then
 #  cp -f ${OPENSHIFT_REPO_DIR}.openshift/config/.htaccess ${OPENSHIFT_REPO_DIR}web/.htaccess
 #fi
+
+export npm_config_userconfig=${OPENSHIFT_DATA_DIR}npm/.npmrc
+export npm_config_cache=${OPENSHIFT_DATA_DIR}npm/.npm

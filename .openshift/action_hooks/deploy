@@ -229,8 +229,6 @@ echo "--> END: Yii2 Custom Handling"
 
 
 
-fixNPM
 installNPM
-runGruntScript
 
 printBanner "End Action Hook: Deploy"
