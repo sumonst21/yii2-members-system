@@ -105,7 +105,9 @@ function getGitVersion {
 function runGruntScript {
     if [ -f "${OPENSHIFT_REPO_DIR}"/Gruntfile.js ]; then
         echo "---> Running Grunt build..."
-        (cd "${OPENSHIFT_REPO_DIR}"; node_modules/grunt-cli/bin/grunt build)
+        cd $OPENSHIFT_REPO_DIR
+
+        $OPENSHIFT_REPO_DIR/node_modules/grunt-cli/bin/grunt build
         echo "---> Done!"
     fi
 }
