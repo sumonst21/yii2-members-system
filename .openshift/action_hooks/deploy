@@ -107,6 +107,15 @@ function getGitVersion {
     echo "--> $(git --version)"
 }
 
+function fixNPM {
+    echo " ---> Fixing NPM Paths ..."
+    cd $OPENSHIFT_DATA_DIR
+    echo "export NPM_CONFIG_USERCONFIG=$OPENSHIFT_HOMEDIR/app-root/build-dependencies/.npmrc" > $OPENSHIFT_DATA_DIR/.env
+    touch $OPENSHIFT_DATA_DIR/.env
+    npm config set cache $OPENSHIFT_HOMEDIR/app-root/build-dependencies/.npm
+    echo " ---> Fixed NPM Paths!"
+}
+
 function installNPM {
     echo " ---> Installing NPM"
     cd $REPO_DIR
