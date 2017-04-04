@@ -12,6 +12,7 @@ export REPO_DIR=${OPENSHIFT_REPO_DIR%/}
 
 export MY_PHPCOMPOSER=$DATA_DIR/composer.phar
 export NODE_MODULES=$REPO_DIR/node_modules
+export MY_NPM_DIR=$DATA_DIR/npm
 
 export YII_INIT=true
 export YII_MIGRATE=true
@@ -110,9 +111,13 @@ function getGitVersion {
 function fixNPM {
     echo " ---> Fixing NPM Paths ..."
     cd $OPENSHIFT_DATA_DIR
-    echo "export NPM_CONFIG_USERCONFIG=$OPENSHIFT_HOMEDIR/app-root/build-dependencies/.npmrc" > $OPENSHIFT_DATA_DIR/.env
-    touch $OPENSHIFT_DATA_DIR/.env
-    npm config set cache $OPENSHIFT_HOMEDIR/app-root/build-dependencies/.npm
+
+    echo "export npm_config_userconfig=$MY_NPM_DIR/.npmrc" > $DATA_DIR/.env
+    touch $DATA_DIR/.env
+
+    npm config set userconfig $MY_NPM_DIR/.npmrc
+    npm config set cache $MY_NPM_DIR/.npm
+
     echo " ---> Fixed NPM Paths!"
 }
 
@@ -223,6 +228,8 @@ echo "--> END: Yii2 Custom Handling"
 #######################################
 
 
+
+fixNPM
 installNPM
 runGruntScript
 
