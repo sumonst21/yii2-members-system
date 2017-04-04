@@ -103,6 +103,12 @@ function getGitVersion {
     echo "--> $(git --version)"
 }
 
+function installNPM {
+    echo " ---> Installing NPM"
+    cd $OPENSHIFT_REPO_DIR
+    npm install
+}
+
 function runGruntScript {
     if [ -f "${OPENSHIFT_REPO_DIR}"/Gruntfile.js ]; then
         echo "---> Running Grunt build..."
