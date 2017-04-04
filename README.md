@@ -13,7 +13,13 @@ You can see it here:
 
 [http://yii2memberssystem-wadeshuler.rhcloud.com/members](http://yii2memberssystem-wadeshuler.rhcloud.com/members)
 
+    username: user
+    password: 123456
+
 [http://yii2memberssystem-wadeshuler.rhcloud.com/admin](http://yii2memberssystem-wadeshuler.rhcloud.com/admin)
+
+    username: root (also, `super` and `admin`)
+    password 123456
 
 **Please Note:** The demo is just an example. I have "members" as a symbolic link from `/mainsite/web/members` pointing to `/frontend/web` and a symbolic link from `/mainsite/web/admin` pointing to `/backend/web`. These symbolic links are not included and are created during my OpenShift action hooks. So unless you push to OpenShift, they won't work. You will need to create your own symbolic links, or you can point sub-domains to the web directories.
 
