@@ -7,33 +7,37 @@
 
 # Don't forget to "chmod +x .openshift/action_hooks/deploy"
 
-export MY_PHPCOMPOSER=$OPENSHIFT_DATA_DIR/composer.phar
-export NODE_MODULES=$OPENSHIFT_REPO_DIR/node_modules
+export DATA_DIR=${$OPENSHIFT_DATA_DIR%/}
+export REPO_DIR=${$OPENSHIFT_REPO_DIR%/}
+
+export MY_PHPCOMPOSER=$DATA_DIR/composer.phar
+export NODE_MODULES=$REPO_DIR/node_modules
+
 export YII_INIT=true
 export YII_MIGRATE=true
 
 function createUploadsDir() {
-    if [ -d "$OPENSHIFT_DATA_DIR/public/uploads" ]; then
+    if [ -d "$DATA_DIR/public/uploads" ]; then
 
         echo "--> Creating DataDir uploads directory"
-        mkdir "$OPENSHIFT_DATA_DIR/public/uploads"
+        mkdir "$DATA_DIR/public/uploads"
 
-        if [ -d "$OPENSHIFT_DATA_DIR/public/uploads/images"]; then
-            mkdir "$OPENSHIFT_DATA_DIR/public/uploads/images"
+        if [ -d "$DATA_DIR/public/uploads/images"]; then
+            mkdir "$DATA_DIR/public/uploads/images"
         fi
 
-        if [ -d "$OPENSHIFT_DATA_DIR/public/uploads/videos"]; then
-            mkdir "$OPENSHIFT_DATA_DIR/public/uploads/videos"
+        if [ -d "$DATA_DIR/public/uploads/videos"]; then
+            mkdir "$DATA_DIR/public/uploads/videos"
         fi
 
-        if [ -d "$OPENSHIFT_DATA_DIR/public/uploads/files"]; then
-            mkdir "$OPENSHIFT_DATA_DIR/public/uploads/files"
+        if [ -d "$DATA_DIR/public/uploads/files"]; then
+            mkdir "$DATA_DIR/public/uploads/files"
         fi
 
     fi
 
     echo "--> Creating Frontend (uploads) Symlink"
-    ln -s "$OPENSHIFT_DATA_DIR/public/uploads" "$OPENSHIFT_REPO_DIR/frontend/web/uploads"
+    ln -s "$DATA_DIR/public/uploads" "$REPO_DIR/frontend/web/uploads"
 }
 
 function repeatSymbol {
@@ -64,11 +68,11 @@ function downloadComposer {
     # if composer does not exist, download it
     echo "--> Checking for Composer"
     if [ ! -f $MY_PHPCOMPOSER ]; then
-        cd $OPENSHIFT_DATA_DIR
+        cd $DATA_DIR
         echo "--> Composer not found..."
         echo "--> Downloading composer..."
         php -r "readfile('https://getcomposer.org/installer');" | php
-        cd $OPENSHIFT_REPO_DIR
+        cd $REPO_DIR
     else
         echo "--> Composer already exists!"
     fi
@@ -105,14 +109,14 @@ function getGitVersion {
 
 function installNPM {
     echo " ---> Installing NPM"
-    cd $OPENSHIFT_REPO_DIR
+    cd $REPO_DIR
     npm install
 }
 
 function runGruntScript {
-    if [ -f "${OPENSHIFT_REPO_DIR}"/Gruntfile.js ]; then
+    if [ -f "$REPO_DIR/Gruntfile.js" ]; then
         echo "---> Running Grunt build..."
-        cd $OPENSHIFT_REPO_DIR
+        cd $REPO_DIR
 
         if [ -d "$NODE_MODULES/grunt-cli/bin" ]; then
             echo " -- node_modules/grunt-cli/bin found!"
@@ -131,8 +135,8 @@ function runGruntScript {
 
 printBanner "Start Action Hook: Deploy"
 
-echo "OpenShift RepoDir: $OPENSHIFT_REPO_DIR"
-echo "OpenShift DataDir: $OPENSHIFT_DATA_DIR"
+echo "OpenShift RepoDir: $REPO_DIR"
+echo "OpenShift DataDir: $DATA_DIR"
 echo "Composer Location: $MY_PHPCOMPOSER"
 
 if [ -f $MY_PHPCOMPOSER ]; then
@@ -149,7 +153,7 @@ getGitVersion
 $MY_PHPCOMPOSER global require "fxp/composer-asset-plugin:^1.2.0"
 
 echo "--> Going back to REPO_DIR"
-cd $OPENSHIFT_REPO_DIR
+cd $REPO_DIR
 
 # Run composer install now, because composer.json runs Yii init in dev mode by default
 echo "--> Run Composer install without dev"
@@ -162,7 +166,7 @@ $MY_PHPCOMPOSER install --no-dev --no-scripts
 
 echo "--> START: Yii2 Custom Handling"
 # Time for Yii2 Fun
-if [ -d "$OPENSHIFT_REPO_DIR/frontend" ] && [ -d "$OPENSHIFT_REPO_DIR/backend" ]; then
+if [ -d "$REPO_DIR/frontend" ] && [ -d "$REPO_DIR/backend" ]; then
 
     # Yii2 Advanced App
     echo "--> Yii Advanced App Detected"
@@ -179,13 +183,13 @@ if [ -d "$OPENSHIFT_REPO_DIR/frontend" ] && [ -d "$OPENSHIFT_REPO_DIR/backend" ]
     fi
 
     echo "--> Creating Mainsite Symlink"
-    ln -s "$OPENSHIFT_REPO_DIR/mainsite/web" "$OPENSHIFT_REPO_DIR/web"
+    ln -s "$REPO_DIR/mainsite/web" "$REPO_DIR/web"
 
     echo "--> Creating Frontend (members) Symlink"
-    ln -s "$OPENSHIFT_REPO_DIR/frontend/web" "$OPENSHIFT_REPO_DIR/mainsite/web/members"
+    ln -s "$REPO_DIR/frontend/web" "$REPO_DIR/mainsite/web/members"
 
     echo "--> Creating Backend (admin) Symlink"
-    ln -s "$OPENSHIFT_REPO_DIR/backend/web" "$OPENSHIFT_REPO_DIR/mainsite/web/admin"
+    ln -s "$REPO_DIR/backend/web" "$REPO_DIR/mainsite/web/admin"
 
     #createUploadsDir
 
@@ -210,7 +214,7 @@ echo "--> END: Yii2 Custom Handling"
 #######################################
 
 
-
+installNPM
 runGruntScript
 
 printBanner "End Action Hook: Deploy"
