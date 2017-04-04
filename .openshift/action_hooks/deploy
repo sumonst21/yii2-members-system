@@ -7,8 +7,8 @@
 
 # Don't forget to "chmod +x .openshift/action_hooks/deploy"
 
-export DATA_DIR=${${OPENSHIFT_DATA_DIR}%/}
-export REPO_DIR=${${OPENSHIFT_REPO_DIR}%/}
+export DATA_DIR=${OPENSHIFT_DATA_DIR%/}
+export REPO_DIR=${OPENSHIFT_REPO_DIR%/}
 
 export MY_PHPCOMPOSER=$DATA_DIR/composer.phar
 export NODE_MODULES=$REPO_DIR/node_modules
