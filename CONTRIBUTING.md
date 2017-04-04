@@ -26,6 +26,7 @@ There are a few areas I would like for you to contribute if you want to:
 - Fix, perfect, cleanup documentation
 - Fix current errors/issues
 - Finish anything listed as @todo (there are plugins to search a project for @todo tags)
+- Write valid Codeception tests
 
 I do not accept chincy hacks! It must be the most Yii way to handle the issue, or
 I wont accept it. So be willing to have your code critiqued.
