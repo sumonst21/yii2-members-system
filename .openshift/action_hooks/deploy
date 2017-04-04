@@ -11,8 +11,6 @@ export DATA_DIR=${OPENSHIFT_DATA_DIR%/}
 export REPO_DIR=${OPENSHIFT_REPO_DIR%/}
 
 export MY_PHPCOMPOSER=$DATA_DIR/composer.phar
-export NODE_MODULES=$REPO_DIR/node_modules
-export MY_NPM_DIR=$DATA_DIR/npm
 
 export YII_INIT=true
 export YII_MIGRATE=true
@@ -108,41 +106,6 @@ function getGitVersion {
     echo "--> $(git --version)"
 }
 
-function fixNPM {
-    echo " ---> Fixing NPM Paths ..."
-    cd $OPENSHIFT_DATA_DIR
-
-    echo "export npm_config_userconfig=$MY_NPM_DIR/.npmrc" > $DATA_DIR/.env
-    touch $DATA_DIR/.env
-
-    npm config set userconfig $MY_NPM_DIR/.npmrc
-    npm config set cache $MY_NPM_DIR/.npm
-
-    echo " ---> Fixed NPM Paths!"
-}
-
-function installNPM {
-    echo " ---> Installing NPM"
-    cd $REPO_DIR
-    npm install
-}
-
-function runGruntScript {
-    if [ -f "$REPO_DIR/Gruntfile.js" ]; then
-        echo "---> Running Grunt build..."
-        cd $REPO_DIR
-
-        if [ -d "$NODE_MODULES/grunt-cli/bin" ]; then
-            echo " -- node_modules/grunt-cli/bin found!"
-            $NODE_MODULES/grunt-cli/bin/grunt build
-        elif [ -d "$NODE_MODULES/.bin" ]; then
-            echo " -- node_modules/.bin found!"
-            $NODE_MODULES/.bin/grunt build
-        fi
-
-        echo "---> Done!"
-    fi
-}
 
 # --------- START CODE ----------
 
@@ -228,7 +191,5 @@ echo "--> END: Yii2 Custom Handling"
 #######################################
 
 
-
-installNPM
 
 printBanner "End Action Hook: Deploy"
