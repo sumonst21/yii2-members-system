@@ -35,6 +35,15 @@ Once Composer has done it's thing, you need to run a few commands before you can
     ./init
     grunt build
 
+Then lastly, create the database `yii2-members-system`. If you already have a database
+with that name, choose another name. Assign a user to that database. Then update  
+`common/config/main-local.php` with your database information.
+
+Now you can migrate:
+
+    ./yii migrate
+
+
 [![Latest Stable Version](https://poser.pugx.org/wadeshuler/yii2-members-system/version?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
 [![License](https://poser.pugx.org/wadeshuler/yii2-members-system/license?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
 [![composer.lock available](https://poser.pugx.org/wadeshuler/yii2-members-system/composerlock?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
