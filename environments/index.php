@@ -70,4 +70,24 @@ return [
             //'mainsite/config/main-local.php', // removed for shared cookie (frontend and mainsite)
         ],
     ],
+    'Demo' => [
+        'path' => 'demo',
+        'setWritable' => [
+            'backend/runtime',
+            'backend/web/assets',
+            'frontend/runtime',
+            'frontend/web/assets',
+            'mainsite/runtime',
+            'mainsite/web/assets',
+        ],
+        'setExecutable' => [
+            'yii',
+        ],
+        'setCookieValidationKey' => [
+            'backend/config/main-local.php',
+            'common/config/cookieValidationKey-local.php', // new shared cookie key
+            //'frontend/config/main-local.php', // removed for shared cookie (frontend and mainsite)
+            //'mainsite/config/main-local.php', // removed for shared cookie (frontend and mainsite)
+        ],
+    ],
 ];
