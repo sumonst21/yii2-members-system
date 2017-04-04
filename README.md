@@ -5,11 +5,6 @@ My members system based on the Yii2 framework.
 
 ---
 
-## WARNING ##
-This project is not complete yet. It currently is for my own personal use.
-
----
-
 ### Demo
 
 You can see it here:
