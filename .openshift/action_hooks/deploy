@@ -8,6 +8,7 @@
 # Don't forget to "chmod +x .openshift/action_hooks/deploy"
 
 export MY_PHPCOMPOSER=$OPENSHIFT_DATA_DIR/composer.phar
+export NODE_MODULES=$OPENSHIFT_REPO_DIR/node_modules
 export YII_INIT=true
 export YII_MIGRATE=true
 
@@ -107,7 +108,14 @@ function runGruntScript {
         echo "---> Running Grunt build..."
         cd $OPENSHIFT_REPO_DIR
 
-        $OPENSHIFT_REPO_DIR/node_modules/grunt-cli/bin/grunt build
+        if [ -d "$NODE_MODULES/grunt-cli/bin" ]; then
+            echo " -- node_modules/grunt-cli/bin found!"
+            $NODE_MODULES/grunt-cli/bin/grunt build
+        elif [ -d "$NODE_MODULES/.bin" ]; then
+            echo " -- node_modules/.bin found!"
+            $NODE_MODULES/.bin/grunt build
+        fi
+
         echo "---> Done!"
     fi
 }
@@ -116,6 +124,16 @@ function runGruntScript {
 
 
 printBanner "Start Action Hook: Deploy"
+
+echo "OpenShift RepoDir: $OPENSHIFT_REPO_DIR"
+echo "OpenShift DataDir: $OPENSHIFT_DATA_DIR"
+echo "Composer Location: $MY_PHPCOMPOSER"
+
+if [ -f $MY_PHPCOMPOSER ]; then
+    echo " - Installed? Yes"
+else
+    echo " - Installed? No"
+fi
 
 downloadComposer
 updateComposerVersion
