@@ -5,6 +5,20 @@ My members system based on the Yii2 framework.
 
 ---
 
+### Features
+
+- Grunt asset handling (and other helpful commands to backup, reset yii, etc)
+- AdminLTE theme on admin/user sections
+- mainsite is the default Yii2 template improved with Grunt asset handling
+- 3 separate sections: admin (backend), users (frontend), and mainsite (for your custom homepage)
+- admins and users are completely separated (sessions, cookies, etc)
+- database migrations (separate user and admin tables, user profile, basic user settings)
+- User component to easily add to `Yii::$app->user->something`
+- Extended controller ready if you need it
+- and probably a few more things, so poke around the code :)
+
+---
+
 ### Demo
 
 You can see it here:
@@ -19,25 +33,11 @@ You can see it here:
 [http://yii2memberssystem-wadeshuler.rhcloud.com/admin](http://yii2memberssystem-wadeshuler.rhcloud.com/admin)
 
     username: root (also, `super` and `admin`)
-    password 123456
+    password: 123456
 
 **Please Note:** The demo is just an example. I have "members" as a symbolic link from `/mainsite/web/members` pointing to `/frontend/web` and a symbolic link from `/mainsite/web/admin` pointing to `/backend/web`. These symbolic links are not included and are created during my OpenShift action hooks. So unless you push to OpenShift, they won't work. You will need to create your own symbolic links, or you can point sub-domains to the web directories.
 
 I have `mainsite` as the main homepage (ie: www.site.com). Then you could create a `users` sub-domain and point it to `/frontend/web` and an `admin` sub-domain pointed to `/backend/web`.
-
----
-
-### Features
-
-- Grunt asset handling (and other helpful commands to backup, reset yii, etc)
-- AdminLTE theme on admin/user sections
-- mainsite is the default Yii2 template improved with Grunt asset handling
-- 3 separate sections: admin (backend), users (frontend), and mainsite (for your custom homepage)
-- admins and users are completely separated (sessions, cookies, etc)
-- database migrations (separate user and admin tables, user profile, basic user settings)
-- User component to easily add to `Yii::$app->user->something`
-- Extended controller ready if you need it
-- and probably a few more things, so poke around the code :)
 
 ---
 
