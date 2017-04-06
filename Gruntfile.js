@@ -49,6 +49,9 @@ module.exports = function (grunt) {
             }
         },
         sass: {
+            options: {
+                sourceMap: true
+            },
             backend: {
                 files: {
                     "backend/assets/compiled/sass/combined.css": "backend/assets/compiled/sass/combined.scss"
