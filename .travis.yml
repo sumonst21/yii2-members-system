@@ -16,8 +16,6 @@ cache:
     - $HOME/.composer/cache
 
 env:
-  - TRAVIS_NODE_VERSION="0.12"
-  - TRAVIS_NODE_VERSION="4"
   - TRAVIS_NODE_VERSION="7.7.1"
 
 before_install:
