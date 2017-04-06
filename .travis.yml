@@ -24,7 +24,6 @@ before_install:
   - npm install
   - grunt build
 
-
 install:
   - travis_retry composer self-update && composer --version
   - travis_retry composer global require "fxp/composer-asset-plugin:^1.2.0"
