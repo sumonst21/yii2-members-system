@@ -195,6 +195,12 @@ module.exports = function (grunt) {
                 "mainsite/web/assets/fonts/*", "!mainsite/web/assets/fonts/.gitignore",
                 "mainsite/web/assets/themes/*", "!mainsite/web/assets/themes/.gitignore"
             ],
+            cache: [
+                "backend/runtime/**/*", "!backend/runtime/.gitignore",
+                "console/runtime/**/*", "!console/runtime/.gitignore",
+                "frontend/runtime/**/*", "!frontend/runtime/.gitignore",
+                "mainsite/runtime/**/*", "!mainsite/runtime/.gitignore"
+            ],
             reset_yii: [
                 "yii",
                 "yii_test",
@@ -233,7 +239,9 @@ module.exports = function (grunt) {
     grunt.registerTask('build:frontend', ['less:frontend', 'sass_import:frontend', 'sass:frontend', 'typescript:frontend', 'concat:frontend', 'cssmin:frontend', 'uglify:frontend', 'copy:frontend']);
     grunt.registerTask('build:mainsite', ['less:mainsite', 'sass_import:mainsite', 'sass:mainsite', 'typescript:mainsite', 'concat:mainsite', 'cssmin:mainsite', 'uglify:mainsite', 'copy:mainsite']);
 
-    grunt.registerTask('clean', ['clean:backend', 'clean:frontend', 'clean:mainsite']);
+    grunt.registerTask('clean-assets', ['clean:backend', 'clean:frontend', 'clean:mainsite']);
+
+    grunt.registerTask('clear-cache', ['clean:cache']);
     grunt.registerTask('reset-yii', ['clean:reset_yii']);
 
     grunt.registerTask('version-bump', function(key) {
