@@ -22,7 +22,7 @@ return [
         ],
         'user' => [
             'class' => 'common\components\User',       // extend User component
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\User',   // custom User Identity Interface
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
