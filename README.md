@@ -64,3 +64,4 @@ Now you can migrate:
 [![Latest Stable Version](https://poser.pugx.org/wadeshuler/yii2-members-system/version?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
 [![License](https://poser.pugx.org/wadeshuler/yii2-members-system/license?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
 [![composer.lock available](https://poser.pugx.org/wadeshuler/yii2-members-system/composerlock?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
+[![Build Status](https://travis-ci.org/WadeShuler/yii2-members-system.svg?branch=master)](https://travis-ci.org/WadeShuler/yii2-members-system)
