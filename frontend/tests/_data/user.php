@@ -2,22 +2,24 @@
 
 return [
     [
-        'username' => 'okirlin',
+        'username' => 'testuser1',
         'auth_key' => 'iwTNae9t34OmnK6l4vT4IeaTk-YWI2Rv',
-        'password_hash' => '$2y$13$CXT0Rkle1EMJ/c1l5bylL.EylfmQ39O5JlHJVFpNn618OUS1HwaIi',
+        // 123456
+        'password_hash' => '$2y$13$jIMEtbZEjjQbAjJ12GDdPOrKJY2SdZhcdfh06M.rtJL36rl4.Fl9K',
         'password_reset_token' => 't5GU9NwpuGYSfb7FEZMAxqtuz2PkEvv_' . time(),
         'created_at' => '1391885313',
         'updated_at' => '1391885313',
-        'email' => 'brady.renner@rutherford.com',
+        'email' => 'testuser1@example.com',
     ],
     [
-        'username' => 'troy.becker',
+        'username' => 'testuser2',
         'auth_key' => 'EdKfXrx88weFMV0vIxuTMWKgfK2tS3Lp',
-        'password_hash' => '$2y$13$g5nv41Px7VBqhS3hVsVN2.MKfgT3jFdkXEsMC4rQJLfaMa7VaJqL2',
+        // 123456
+        'password_hash' => '$2y$13$9KYdEiAoSoK5v8C2QW.eguOXhe65muANbzwWrMKCagDrCkhlj3RUu',
         'password_reset_token' => '4BSNyiZNAuxjs5Mty990c47sVrgllIi_' . time(),
         'created_at' => '1391885313',
         'updated_at' => '1391885313',
-        'email' => 'nicolas.dianna@hotmail.com',
+        'email' => 'testuser2@example.com',
         'status' => '0',
     ],
 ];

@@ -2,23 +2,51 @@
 namespace frontend\tests\functional;
 
 use frontend\tests\FunctionalTester;
+use frontend\models\LoginForm;
+use common\fixtures\User as UserFixture;
+use common\fixtures\UserProfile as UserProfileFixture;
 
 /* @var $scenario \Codeception\Scenario */
 
 class ContactCest
 {
-    public function _before(FunctionalTester $I)
+    public function _fixtures()
     {
-        $I->amOnPage(['site/contact']);
+        return [
+            'user' => [
+                'class' => UserFixture::className(),
+                'dataFile' => codecept_data_dir() . 'user.php'
+            ],
+            'userProfile' => [
+                'class' => UserProfileFixture::className(),
+                'dataFile' => codecept_data_dir() . 'user_profile.php'
+            ]
+        ];
     }
 
     public function checkContact(FunctionalTester $I)
     {
+        $I->amOnRoute('site/contact');
+
+        // Requires login to access
+        $I->dontSee('Contact', 'h1');
+        $I->see('Member Login', 'h1');
+        $I->seeLink('Forgot password');
+
+        $user = \common\models\User::findByUsername('testuser1');
+        $I->amLoggedInAs($user);
+
+        $I->amOnRoute('site/contact');
         $I->see('Contact', 'h1');
     }
 
     public function checkContactSubmitNoData(FunctionalTester $I)
     {
+        $user = \common\models\User::findByUsername('testuser1');
+        $I->amLoggedInAs($user);
+
+        $I->amOnRoute('site/contact');
+
         $I->submitForm('#contact-form', []);
         $I->see('Contact', 'h1');
         $I->seeValidationError('Name cannot be blank');
@@ -30,6 +58,11 @@ class ContactCest
 
     public function checkContactSubmitNotCorrectEmail(FunctionalTester $I)
     {
+        $user = \common\models\User::findByUsername('testuser1');
+        $I->amLoggedInAs($user);
+
+        $I->amOnRoute('site/contact');
+
         $I->submitForm('#contact-form', [
             'ContactForm[name]' => 'tester',
             'ContactForm[email]' => 'tester.email',
@@ -46,6 +79,11 @@ class ContactCest
 
     public function checkContactSubmitCorrectData(FunctionalTester $I)
     {
+        $user = \common\models\User::findByUsername('testuser1');
+        $I->amLoggedInAs($user);
+
+        $I->amOnRoute('site/contact');
+
         $I->submitForm('#contact-form', [
             'ContactForm[name]' => 'tester',
             'ContactForm[email]' => 'tester@example.com',

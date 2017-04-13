@@ -54,7 +54,7 @@ class LoginFormTest extends \Codeception\Test\Unit
     {
         $model = new LoginForm([
             'username' => 'bayer.hudson',
-            'password' => 'password_0',
+            'password' => '123456',
         ]);
 
         expect('model should login user', $model->login())->true();

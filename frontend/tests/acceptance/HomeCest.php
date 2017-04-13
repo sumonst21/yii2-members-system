@@ -7,15 +7,35 @@ use yii\helpers\Url;
 
 class HomeCest
 {
+
+    protected function formParams($login, $password)
+    {
+        return [
+            'LoginForm[username]' => $login,
+            'LoginForm[password]' => $password,
+        ];
+    }
+
     public function checkHome(AcceptanceTester $I)
     {
-        $I->amOnPage(Url::toRoute('/site/index'));
-        $I->see('My Company');
+        $I->amOnRoute('site/index');
 
-        $I->seeLink('About');
-        $I->click('About');
-        $I->wait(2); // wait for page to be opened
+        // should not be logged in
+        $I->dontSee('Member Dashboard!', 'h1');
 
-        $I->see('This is the About page.');
+        // should have been redirected to login page
+        $I->seeInCurrentUrl('/site/login');
+        $I->see('Member Login', 'h1');
+        $I->seeLink('Forgot password');
+
+        $I->wait(1); // ensure page is fully loaded
+
+        // submit login form
+        $I->submitForm('#login-form', $this->formParams('user', '123456'));
+
+        // check if logged in
+        $I->seeInCurrentUrl('/site/index');
+        $I->dontSee('Member Login', 'h1');
+        $I->see('Member Dashboard!', 'h1');
     }
 }

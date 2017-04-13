@@ -2,8 +2,8 @@
 
 namespace backend\tests\functional;
 
-use \backend\tests\FunctionalTester;
-use common\fixtures\User as UserFixture;
+use backend\tests\FunctionalTester;
+use common\fixtures\Admin as AdminFixture;
 
 /**
  * Class LoginCest
@@ -14,7 +14,7 @@ class LoginCest
     {
         $I->haveFixtures([
             'user' => [
-                'class' => UserFixture::className(),
+                'class' => AdminFixture::className(),
                 'dataFile' => codecept_data_dir() . 'login_data.php'
             ]
         ]);
@@ -24,13 +24,12 @@ class LoginCest
      */
     public function loginUser(FunctionalTester $I)
     {
-        $I->amOnPage('/site/login');
-        $I->fillField('Username', 'erau');
-        $I->fillField('Password', 'password_0');
-        $I->click('login-button');
+        $I->amOnRoute('site/login');
+        $I->fillField('Username', 'admin');
+        $I->fillField('Password', '123456');
+        $I->click('Sign in');
 
-        $I->see('Logout (erau)', 'form button[type=submit]');
-        $I->dontSeeLink('Login');
-        $I->dontSeeLink('Signup');
+        $I->see('Admin Dashboard!', 'h1');
+        $I->dontSee('Admin Login', 'h1');
     }
 }

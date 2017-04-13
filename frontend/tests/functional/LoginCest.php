@@ -4,18 +4,22 @@ namespace frontend\tests\functional;
 
 use frontend\tests\FunctionalTester;
 use common\fixtures\User as UserFixture;
+use common\fixtures\UserProfile as UserProfileFixture;
 
 class LoginCest
 {
-    function _before(FunctionalTester $I)
+    public function _fixtures()
     {
-        $I->haveFixtures([
+        return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => codecept_data_dir() . 'login_data.php'
+                'dataFile' => codecept_data_dir() . 'user.php'
+            ],
+            'userProfile' => [
+                'class' => UserProfileFixture::className(),
+                'dataFile' => codecept_data_dir() . 'user_profile.php'
             ]
-        ]);
-        $I->amOnRoute('site/login');
+        ];
     }
 
     protected function formParams($login, $password)
@@ -28,6 +32,7 @@ class LoginCest
 
     public function checkEmpty(FunctionalTester $I)
     {
+        $I->amOnRoute('site/login');
         $I->submitForm('#login-form', $this->formParams('', ''));
         $I->seeValidationError('Username cannot be blank.');
         $I->seeValidationError('Password cannot be blank.');
@@ -35,14 +40,16 @@ class LoginCest
 
     public function checkWrongPassword(FunctionalTester $I)
     {
-        $I->submitForm('#login-form', $this->formParams('admin', 'wrong'));
+        $I->amOnRoute('site/login');
+        $I->submitForm('#login-form', $this->formParams('nouser', 'wrongpass'));
         $I->seeValidationError('Incorrect username or password.');
     }
-    
+
     public function checkValidLogin(FunctionalTester $I)
     {
-        $I->submitForm('#login-form', $this->formParams('erau', 'password_0'));
-        $I->see('Logout (erau)', 'form button[type=submit]');
+        $I->amOnRoute('site/login');
+        $I->submitForm('#login-form', $this->formParams('testuser1', '123456'));
+        $I->see('Member Dashboard!', 'h1');
         $I->dontSeeLink('Login');
         $I->dontSeeLink('Signup');
     }
