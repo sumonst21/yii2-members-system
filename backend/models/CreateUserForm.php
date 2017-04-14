@@ -1,9 +1,9 @@
 <?php
 namespace backend\models;
 
-use common\models\User;
-use yii\base\Model;
 use Yii;
+use yii\base\Model;
+use common\models\User;
 
 /**
  * Create User Form

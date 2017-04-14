@@ -1,9 +1,9 @@
 <?php
 namespace backend\models;
 
-use backend\models\Admin;
-use yii\base\Model;
 use Yii;
+use yii\base\Model;
+use backend\models\Admin;
 
 /**
  * Create Admin Form

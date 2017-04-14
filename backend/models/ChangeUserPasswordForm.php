@@ -1,10 +1,10 @@
 <?php
 namespace backend\models;
 
-use common\models\User;
+use Yii;
 use yii\base\InvalidParamException;
 use yii\base\Model;
-use Yii;
+use common\models\User;
 
 /**
  * Change User password form

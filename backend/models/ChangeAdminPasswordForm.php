@@ -2,10 +2,10 @@
 namespace backend\models;
 
 use Yii;
-use backend\models\Admin;
 use yii\base\InvalidParamException;
 use yii\base\Model;
 use yii\web\ForbiddenHttpException;
+use backend\models\Admin;
 
 /**
  * Change Admin password form
