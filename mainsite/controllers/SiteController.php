@@ -24,7 +24,6 @@ class SiteController extends BaseController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['?'],
                     ],
                 ],
             ],
