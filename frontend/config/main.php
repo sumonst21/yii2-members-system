@@ -24,11 +24,19 @@ return [
             'class' => 'common\components\User',       // extend User component
             'identityClass' => 'common\models\User',   // custom User Identity Interface
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => [
+                'name' => '_identity-frontend',
+                'httpOnly' => true,
+                //'domain' => Yii::getAlias('@domainName'),     // uncomment for sub-domain use
+            ],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
+            'cookieParams' => [
+                //'domain' => Yii::getAlias('@domainName'),     // uncomment for sub-domain use
+                'httpOnly' => true,
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
