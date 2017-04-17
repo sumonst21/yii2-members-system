@@ -34,8 +34,8 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
             'cookieParams' => [
-                //'domain' => Yii::getAlias('@domainName'),     // uncomment for sub-domain use
                 'httpOnly' => true,
+                //'domain' => Yii::getAlias('@domainName'),     // uncomment for sub-domain use
             ],
         ],
         'log' => [
