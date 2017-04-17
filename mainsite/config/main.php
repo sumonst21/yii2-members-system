@@ -6,6 +6,8 @@ $params = array_merge(
     require(__DIR__ . '/params-local.php')
 );
 
+$baseUrl = str_replace('/web', '', (new \yii\web\Request)->getBaseUrl());
+
 return [
     'id' => 'app-mainsite',
     'name' => 'Yii2 Members System',
@@ -18,7 +20,8 @@ return [
             'bundles' => false,
         ],
         'request' => [
-            'csrfParam' => '_csrf-mainsite',
+            'csrfParam' => '_csrf-frontend',
+            'baseUrl' => $baseUrl,
         ],
         'user' => [
             'class' => 'common\components\User',       // extend User component
@@ -58,8 +61,10 @@ return [
         ],
         'urlManagerFrontend' => [
             'class' => 'yii\web\UrlManager',
-            'baseUrl' => '/frontend',                   // comment out for sub-domain use
-            //'hostInfo' => 'http://' . Yii::getAlias('@frontendSubdomain') . '.' . Yii::getAlias('@domainName'),  // uncomment for sub-domain use
+            // comment out the following line for sub-domain use
+            'baseUrl' => $baseUrl . '/../frontend',
+            // uncomment the following line for sub-domain use
+            //'hostInfo' => Yii::getAlias('@httpScheme') . '://' . Yii::getAlias('@frontendSubdomain') . '.' . Yii::getAlias('@domainName'),
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [

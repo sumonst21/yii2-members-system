@@ -6,6 +6,8 @@ $params = array_merge(
     require(__DIR__ . '/params-local.php')
 );
 
+$baseUrl = str_replace('/web', '', (new \yii\web\Request)->getBaseUrl());
+
 return [
     'id' => 'app-backend',
     'name' => 'Yii2 Members System',
@@ -19,6 +21,7 @@ return [
         ],
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'baseUrl' => $baseUrl,
         ],
         'user' => [
             'class' => 'backend\components\User',       // extend User component
