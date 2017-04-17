@@ -52,7 +52,7 @@ Once Composer has done it's thing, you need to run a few commands before you can
     ./init
     grunt build
 
-Then lastly, create the database `yii2-members-system`. If you already have a database
+Then, create the database `yii2-members-system`. If you already have a database
 with that name, choose another name. Assign a user to that database. Then update  
 `common/config/main-local.php` with your database information.
 
@@ -60,6 +60,42 @@ Now you can migrate:
 
     ./yii migrate
 
+Out of the box, the paths would be like so:
+
+    http://localhost/yii2-members-system/mainsite
+    http://localhost/yii2-members-system/frontend
+    http://localhost/yii2-members-system/backend
+
+It is highly recommended to setup VHOSTS and point the domain (even if local) to
+the `web` directories. I prefer to map `yii2-members-system.dev` to `mainsite/web`,
+`user.yii2-members-system.dev` to `frontend/web`, and `admin.yii2-members-system.dev`
+to `backend/web`. Obviously, you can use whatever domain name you want here.
+
+Here is an example of my VHOSTS from my local XAMPP:
+
+    <VirtualHost *:80>
+        ServerName yii2-members-system.dev
+        ServerAlias www.yii2-members-system.dev
+        DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/yii2-members-system/mainsite/web"
+        ErrorLog "logs/mainsite.yii2-members-system.dev-error_log"
+        CustomLog "logs/mainsite.yii2-members-system.dev-access_log" common
+    </VirtualHost>
+
+    <VirtualHost *:80>
+        ServerName yii2-members-system.dev
+        ServerAlias users.yii2-members-system.dev
+        DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/yii2-members-system/frontend/web"
+        ErrorLog "logs/users.yii2-members-system.dev-error_log"
+        CustomLog "logs/users.yii2-members-system.dev-access_log" common
+    </VirtualHost>
+
+    <VirtualHost *:80>
+        ServerName yii2-members-system.dev
+        ServerAlias admin.yii2-members-system.dev
+        DocumentRoot "/Applications/XAMPP/xamppfiles/htdocs/yii2-members-system/backend/web"
+        ErrorLog "logs/admin.yii2-members-system.dev-error_log"
+        CustomLog "logs/admin.yii2-members-system.dev-access_log" common
+    </VirtualHost>
 
 [![Latest Stable Version](https://poser.pugx.org/wadeshuler/yii2-members-system/version?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
 [![License](https://poser.pugx.org/wadeshuler/yii2-members-system/license?format=flat-square)](https://packagist.org/packages/wadeshuler/yii2-members-system)
