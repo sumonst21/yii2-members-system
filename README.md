@@ -2,7 +2,7 @@ Yii2 Member's System
 --------------------
 
 My members system based on the Yii2 advanced framework. Grunt, LESS/SASS, TS,
-Backup, reset yii, clear cace, shared login, and more...
+Backup, reset yii, clear cache, shared login, and more...
 
 ---
 
