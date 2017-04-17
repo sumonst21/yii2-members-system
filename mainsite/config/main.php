@@ -24,11 +24,19 @@ return [
             'class' => 'common\components\User',       // extend User component
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => [
+                'name' => '_identity-frontend',
+                'httpOnly' => true,
+                //'domain' => Yii::getAlias('@domainName'),     // uncomment for sub-domain use
+            ],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
+            'cookieParams' => [
+                'httpOnly' => true,
+                //'domain' => Yii::getAlias('@domainName'),     // uncomment for sub-domain use
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -43,6 +51,15 @@ return [
             'errorAction' => 'site/error',
         ],
         'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
+        'urlManagerFrontend' => [
+            'class' => 'yii\web\UrlManager',
+            'baseUrl' => '/frontend',                   // comment out for sub-domain use
+            //'hostInfo' => 'http://' . Yii::getAlias('@frontendSubdomain') . '.' . Yii::getAlias('@domainName'),  // uncomment for sub-domain use
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
