@@ -81,7 +81,7 @@ strongly recommend you don't use `.com` or any real domain extension.
 
 To create this domain, edit your `hosts` file and point your localhost IP to it.
 
-**Mac, *Nix:** `sudo nano /etc/hosts`
+**Mac, Unix:** `sudo nano /etc/hosts`
 
 Enter your password. At the bottom of the `hosts` file, add:
 
@@ -98,7 +98,7 @@ If your on Windows 10 and have issues getting the hosts file to save, do this. C
 
 
 
-Here is an example of my VHOSTS from my local XAMPP:
+Here is an example of my VHOSTS from my local XAMPP. You may need to adjust the DocumentRoot path:
 
     <VirtualHost *:80>
         ServerName yii2-members-system.dev
@@ -125,6 +125,21 @@ Here is an example of my VHOSTS from my local XAMPP:
     </VirtualHost>
 
 Restart your web server and access your new domains in your browser.
+
+### How to get shared session (mainsite to frontend)
+
+All you have to do is follow the comments in `mainsite/config/main.php` and `frontend/config/main.php` and edit the `URL Manager Aliases` in `common/config/bootstrap.php`.
+
+In the config files (`xxx/config/main.php`) you will see a few comments, like:
+
+    // uncomment for sub-domain use
+    // comment out the following line for sub-domain use
+    // uncomment the following line for sub-domain use
+
+Follow those comments in the config files to know what needs to be on or off, for sub-domain use.
+
+If you do not edit these files, you will get errors when you are using sub-domains!
+
 
 If you have issues, please check the `issues` tab.
 
