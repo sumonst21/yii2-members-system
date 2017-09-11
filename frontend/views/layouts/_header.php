@@ -232,13 +232,13 @@ use yii\helpers\Url;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= Url::base() ?>/images/blank-profile-icon.png" class="user-image" alt="User Image" />
-                        <span class="hidden-xs"><?= Yii::$app->user->niceName ?></span>
+                        <span class="hidden-xs"><?= Html::encode(Yii::$app->user->niceName) ?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
                             <img src="<?= Url::base() ?>/images/blank-profile-icon.png" class="img-circle" alt="User Image" />
-                            <p><?= Yii::$app->user->niceName ?></p>
+                            <p><?= Html::encode(Yii::$app->user->niceName) ?></p>
                         </li>
                         <!-- Menu Body -->
                         <!--

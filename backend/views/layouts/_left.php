@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use yii\helpers\Html;
 use yii\helpers\Url;
 use backend\models\Admin;
 ?>
@@ -16,7 +17,7 @@ use backend\models\Admin;
                 <img src="<?= Url::base() ?>/images/blank-profile-icon.png" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
-                <p><?= Yii::$app->user->niceName ?></p>
+                <p><?= Html::encode(Yii::$app->user->niceName) ?></p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>

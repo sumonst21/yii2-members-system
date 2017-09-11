@@ -52,7 +52,7 @@ use common\widgets\Alert;
         $menuItems[] = '<li>'
             . Html::beginForm(Yii::$app->urlManagerFrontend->createAbsoluteUrl(['site/logout']), 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
