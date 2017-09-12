@@ -3,7 +3,9 @@ namespace backend\models;
 
 use Yii;
 use yii\base\Model;
+
 use common\models\User;
+use common\models\UserProfile;
 
 /**
  * Create User Form
@@ -68,7 +70,7 @@ class CreateUserForm extends User
 
             if ($user->save())
             {
-                $profile = new \common\models\UserProfile;
+                $profile = new UserProfile;
                 $profile->user_id = $user->id;
                 $profile->firstname = $this->firstname;
                 $profile->lastname = $this->lastname;
