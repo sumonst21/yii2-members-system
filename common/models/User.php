@@ -75,6 +75,22 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'username' => 'Username',
+            'email' => 'Email',
+            'sponsor_id' => 'Sponsor',
+            'userStatus' => 'Status',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
@@ -295,5 +311,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUserStatusDropdown()
     {
         return self::getUserStatusConst();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSponsor()
+    {
+        return $this->hasOne(User::className(), ['id' => 'sponsor_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReferrals()
+    {
+        return $this->hasMany(User::className(), ['sponsor_id' => 'id']);
     }
 }
