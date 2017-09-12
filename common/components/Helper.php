@@ -1,7 +1,9 @@
 <?php
 namespace common\components;
 
+use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\Html;
 
 class Helper
 {
@@ -11,7 +13,7 @@ class Helper
         $phone = mb_convert_kana($phone, 'a', 'UTF-8');
         $phone = preg_replace('~[^+0-9]+~', '', $phone);
         $options['href'] = 'tel:' . $phone;
-        return \yii\helpers\Html::tag('a', $text, $options);
+        return Html::tag('a', $text, $options);
     }
 
     public static function flashStatusClass($key)
@@ -66,7 +68,7 @@ class Helper
      */
     public static function renderFlashMessages()
     {
-        foreach ( \Yii::$app->session->getAllFlashes() as $key => $message) {
+        foreach ( Yii::$app->session->getAllFlashes() as $key => $message) {
             echo self::renderFlashMessage($key, $message);
         }
     }

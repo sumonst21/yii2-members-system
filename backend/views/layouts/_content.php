@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\widgets\Breadcrumbs;
@@ -22,7 +23,7 @@ use dmstr\widgets\Alert;
                     echo Inflector::camel2words(
                         Inflector::id2camel($this->context->module->id)
                     );
-                    echo ($this->context->module->id !== \Yii::$app->id) ? '<small>Module</small>' : '';
+                    echo ($this->context->module->id !== Yii::$app->id) ? '<small>Module</small>' : '';
                 } ?>
             </h1>
         <?php } ?>

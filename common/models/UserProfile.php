@@ -4,6 +4,9 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+
+use common\models\User;
 
 /**
  * This is the model class for table "user_profile".
@@ -28,7 +31,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property User $user
  */
-class UserProfile extends \yii\db\ActiveRecord
+class UserProfile extends ActiveRecord
 {
     /**
      * @inheritdoc
