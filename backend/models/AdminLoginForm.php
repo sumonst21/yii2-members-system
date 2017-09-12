@@ -15,7 +15,6 @@ class AdminLoginForm extends Model
 
     private $_user;
 
-
     /**
      * @inheritdoc
      */
