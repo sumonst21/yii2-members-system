@@ -4,6 +4,7 @@ namespace backend\models;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\base\Model;
+
 use backend\models\Admin;
 
 /**
@@ -20,7 +21,6 @@ class ChangePasswordForm extends Model
      * @var \common\models\User
      */
     private $_user;
-
 
     /**
      * Creates a form model given a token.
