@@ -3,15 +3,18 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\User;
-use common\models\UserSearch;
-use common\models\UserProfile;
-use frontend\components\BaseController;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
+use common\components\GenericError;
+use common\models\User;
+use common\models\UserSearch;
+use common\models\UserProfile;
+
+use frontend\components\BaseController;
+use frontend\models\ChangePasswordForm;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -48,7 +51,7 @@ class UserController extends BaseController
      */
     public function actionIndex()
     {
-        $id = \Yii::$app->user->id;
+        $id = Yii::$app->user->id;
 
         return $this->render('index', [
             'user' => $this->findModel($id),
@@ -64,7 +67,7 @@ class UserController extends BaseController
     public function actionView($id = null)
     {
         if ( ! isset($id) ) {
-            $id = \Yii::$app->user->id;
+            $id = Yii::$app->user->id;
         }
 
         $user = User::findOne($id);
@@ -90,7 +93,7 @@ class UserController extends BaseController
      */
     public function actionUpdate($id=null)
     {
-        if ( isset($id) && ($id != \Yii::$app->user->id) ) {
+        if ( isset($id) && ($id != Yii::$app->user->id) ) {
             throw new ForbiddenHttpException('You can only update your own account!');
         }
 
@@ -127,7 +130,7 @@ class UserController extends BaseController
      */
     public function actionDelete($id)
     {
-        if ( isset($id) && ($id != \Yii::$app->user->id) ) {
+        if ( isset($id) && ($id != Yii::$app->user->id) ) {
             throw new ForbiddenHttpException('You can only delete your own account!');
         }
 
@@ -135,7 +138,7 @@ class UserController extends BaseController
         $model->status = User::STATUS_DELETED;
 
         if ( ! $model->validate() || ! $model->save() ) {
-            throw new \common\components\GenericError('Error deleting account!');
+            throw new GenericError('Error deleting account!');
         }
 
         Yii::$app->user->logout();
@@ -171,10 +174,10 @@ class UserController extends BaseController
      */
     public function actionChangePassword()
     {
-        $id = \Yii::$app->user->id;
+        $id = Yii::$app->user->id;
 
         try {
-            $model = new \frontend\models\ChangePasswordForm($id);
+            $model = new ChangePasswordForm($id);
         } catch (InvalidParamException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
@@ -196,7 +199,7 @@ class UserController extends BaseController
      */
     public function actionProfile()
     {
-        $id = \Yii::$app->user->id;
+        $id = Yii::$app->user->id;
         $user = User::findOne($id);
 
         if ( ! $user ) {
@@ -216,7 +219,7 @@ class UserController extends BaseController
      */
     public function actionSettings()
     {
-        $id = \Yii::$app->user->id;
+        $id = Yii::$app->user->id;
 
         $user = User::findOne($id);
         if ( ! $user ) {
@@ -243,7 +246,7 @@ class UserController extends BaseController
 
     public function actionDeleteAccount()
     {
-        $model = User::findOne(\Yii::$app->user->id);
+        $model = User::findOne(Yii::$app->user->id);
 
         if ( ! $model ) {
             throw new NotFoundHttpException("The user was not found.");
