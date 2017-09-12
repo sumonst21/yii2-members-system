@@ -31,11 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'username',
             [
                 'attribute' => 'firstname',
-                'value' => 'userProfile.firstname'
+                'value' => 'profile.firstname'
             ],
             [
                 'attribute' => 'lastname',
-                'value' => 'userProfile.lastname'
+                'value' => 'profile.lastname'
             ],
             'email:email',
             //'auth_key',

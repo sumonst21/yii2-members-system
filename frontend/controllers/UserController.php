@@ -101,7 +101,7 @@ class UserController extends BaseController
             throw new NotFoundHttpException("The user was not found.");
         }
 
-        $profile = UserProfile::findOne($user->userProfile->id);
+        $profile = UserProfile::findOne($user->profile->id);
         if ( ! $profile ) {
             throw new NotFoundHttpException("The profile was not found.");
         }
@@ -223,7 +223,7 @@ class UserController extends BaseController
             throw new NotFoundHttpException("The user was not found.");
         }
 
-        $profile = UserProfile::findOne($user->userProfile->id);
+        $profile = UserProfile::findOne($user->profile->id);
         if ( ! $profile ) {
             throw new NotFoundHttpException("The profile was not found.");
         }

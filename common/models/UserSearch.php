@@ -47,7 +47,7 @@ class UserSearch extends User
     {
         $query = User::find();
 
-        $query->joinWith(['userProfile']);
+        $query->joinWith(['profile']);
 
         // add conditions that should always apply here
 
@@ -95,7 +95,7 @@ class UserSearch extends User
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            //$query->joinWith(['userProfile']);
+            // $query->joinWith(['profile']);
             return $dataProvider;
         }
 

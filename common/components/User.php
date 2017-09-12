@@ -21,8 +21,8 @@ class User extends \yii\web\User
     public function getFullName()
     {
         $fullname = null;
-        $firstname = Yii::$app->user->identity->userProfile->firstname;
-        $lastname = Yii::$app->user->identity->userProfile->lastname;
+        $firstname = Yii::$app->user->identity->profile->firstname;
+        $lastname = Yii::$app->user->identity->profile->lastname;
 
         if ( isset($firstname) && ! empty($firstname) )
         {

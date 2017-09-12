@@ -31,15 +31,15 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
             ],
             'username',
             'email:email',
-            'userProfile.firstname',
-            'userProfile.lastname',
+            'profile.firstname',
+            'profile.lastname',
             [
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->userProfile->phone) ? \common\components\Helper::tel($user->userProfile->phone) : null,
+                'value' => isset($user->profile->phone) ? \common\components\Helper::tel($user->profile->phone) : null,
             ],
-            'userProfile.skype',
+            'profile.skype',
             [
                 'attribute' => 'status',
                 'label' => 'Status',
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
             // Fix to get correct last updated timestamp, depending on which was updated last (user or user_profile)
             [
                 'label' => 'Updated At',
-                'value' => ($user->userProfile->updated_at > $user->updated_at) ? $user->userProfile->updated_at : $user->updated_at,
+                'value' => ($user->profile->updated_at > $user->updated_at) ? $user->profile->updated_at : $user->updated_at,
                 'format' => 'datetime',
             ],
         ],
