@@ -5,7 +5,10 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+
 use backend\models\Admin;
+
+use dmstr\widgets\Menu;
 ?>
 <aside class="main-sidebar">
 
@@ -34,7 +37,7 @@ use backend\models\Admin;
         </form>
         <!-- /.search form -->
 
-        <?= dmstr\widgets\Menu::widget(
+        <?= Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
