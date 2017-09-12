@@ -6,8 +6,8 @@ use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
 
-use common\components\GenericError;
 use common\models\User;
 
 use frontend\components\BaseController;
@@ -175,7 +175,7 @@ class SiteController extends BaseController
                         ->send();
 
                     if (!$mailed) {
-                        throw new GenericError('Error sending validation link! Please contact support.', 'Mailer Error!');
+                        throw new HttpException(500, 'Error sending validation link! Please contact support.', 'Mailer Error!');
                     }
 
                     Yii::$app->session->setFlash('success', 'Your account has been created. Before you can login, you must click the verification link in your email.');
@@ -279,7 +279,7 @@ class SiteController extends BaseController
             }
         }
 
-        throw new GenericError('There was an error activating your account. Please contact support.');
+        throw new HttpException(500, 'There was an error activating your account. Please contact support.');
 
 
     }

@@ -7,8 +7,8 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\HttpException;
 
-use common\components\GenericError;
 use common\models\User;
 use common\models\UserSearch;
 use common\models\UserProfile;
@@ -138,7 +138,7 @@ class UserController extends BaseController
         $model->status = User::STATUS_DELETED;
 
         if ( ! $model->validate() || ! $model->save() ) {
-            throw new GenericError('Error deleting account!');
+            throw new HttpException(500, 'Error deleting account!');
         }
 
         Yii::$app->user->logout();
