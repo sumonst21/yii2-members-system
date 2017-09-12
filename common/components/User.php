@@ -2,6 +2,7 @@
 namespace common\components;
 
 use Yii;
+use yii\web\User as UserComponent;
 
 /**
  * Extended yii\web\User
@@ -11,7 +12,7 @@ use Yii;
  *
  * So we can use variables and functions directly in "->user"
  */
-class User extends \yii\web\User
+class User extends UserComponent
 {
     public function getUsername()
     {
