@@ -6,6 +6,8 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
+use common\components\Helper;
+
 $this->title = 'View User: ' . $model->username;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->username;
@@ -29,7 +31,7 @@ $this->params['breadcrumbs'][] = $model->username;
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->profile->phone) ? \common\components\Helper::tel($user->profile->phone) : null,
+                'value' => isset($user->profile->phone) ? Helper::tel($user->profile->phone) : null,
             ],
             //'auth_key',
             //'password_hash',
