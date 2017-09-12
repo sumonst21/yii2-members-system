@@ -7,6 +7,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+
+use yii\widgets\MaskedInput;
 ?>
 
 <div class="user-form">
@@ -23,7 +25,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($user, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($profile, 'phone')->widget(\yii\widgets\MaskedInput::className(), [
+    <?= $form->field($profile, 'phone')->widget(MaskedInput::className(), [
         'mask' => '(999) 999-9999',
     ]) ?>
 

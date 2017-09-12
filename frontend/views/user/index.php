@@ -4,8 +4,11 @@
 /* @var $user common\models\User */
 /* @var $profile common\models\UserProfile */
 
+use Yii;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+
+use common\components\Helper;
 use common\models\User;
 
 $this->title = 'User Profile';
@@ -15,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
 
     <p>
         <?php
-        if ( \Yii::$app->user->id === $user->id ) {
+        if ( Yii::$app->user->id === $user->id ) {
             echo Html::a('Update', 'update', ['class' => 'btn btn-primary']);
         }
         ?>
@@ -37,7 +40,7 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->profile->phone) ? \common\components\Helper::tel($user->profile->phone) : null,
+                'value' => isset($user->profile->phone) ? Helper::tel($user->profile->phone) : null,
             ],
             'profile.skype',
             [

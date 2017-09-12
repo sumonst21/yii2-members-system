@@ -7,6 +7,8 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
+use common\components\Helper;
+
 $this->title = 'Member Login';
 ?>
 <div class="container site-login">
@@ -14,7 +16,7 @@ $this->title = 'Member Login';
 
         <h1><?= Html::encode($this->title) ?></h1>
 
-        <?= \common\components\Helper::renderFlashMessages() ?>
+        <?= Helper::renderFlashMessages() ?>
 
         <div class="center-box">
 

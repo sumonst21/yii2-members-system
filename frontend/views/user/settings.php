@@ -7,6 +7,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+
 use common\models\User;
 
 $this->title = 'User Settings';
