@@ -99,13 +99,15 @@ class UserController extends BaseController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $user = $this->findModel($id);
+        $profile = \common\models\UserProfile::find(['user_id' => $user->id])->one();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post()) && $user->save() && $profile->save()) {
+            return $this->redirect(['view', 'id' => $user->id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'user' => $user,
+                'profile' => $profile,
             ]);
         }
     }

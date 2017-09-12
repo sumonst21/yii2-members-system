@@ -25,6 +25,12 @@ $this->params['breadcrumbs'][] = $user->username;
     <?= DetailView::widget([
         'model' => $user,
         'attributes' => [
+            [
+                'attribute' => 'sponsor_id',
+                'label' => 'Sponsor',
+                'format' => 'raw',
+                'value' => isset($model->sponsor_id) ? Html::a($model->sponsor->username, ['/user/view', 'id' => $model->sponsor_id]) : null,
+            ],
             'username',
             'email:email',
             'userProfile.firstname',
@@ -33,19 +39,10 @@ $this->params['breadcrumbs'][] = $user->username;
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->userProfile->phone) ? \common\components\Helper::tel($user->userProfile->phone) : '<span class="not-set">(not set)</span>',
+                'value' => isset($user->userProfile->phone) ? \common\components\Helper::tel($user->userProfile->phone) : null,
             ],
             'userProfile.skype',
-            [
-                'attribute' => 'status',
-                'label' => 'Status',
-                'value' => $user->userStatus,
-            ],
-            [
-                'attribute' => 'sponsor_id',
-                'label' => 'Sponsor',
-                'value' => $user->sponsor_id->username,
-            ],
+            'userStatus',
             'created_at:datetime',
             'updated_at:datetime',
         ],

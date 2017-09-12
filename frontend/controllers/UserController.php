@@ -106,25 +106,16 @@ class UserController extends BaseController
             throw new NotFoundHttpException("The profile was not found.");
         }
 
-        if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post()))
+        if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post()) && $user->save() && $profile->save())
         {
-            $isValid = $user->validate();
-            $isValid = $profile->validate() && $isValid;
-
-            if ( $isValid )
-            {
-                $user->save(false);
-                $profile->save(false);
-                Yii::$app->session->setFlash('success', 'Your account has been updated!');
-
-                return $this->redirect('index');
-            }
+            Yii::$app->session->setFlash('success', 'Your account has been updated!');
+            return $this->redirect(['view', 'id' => $user->id]);
+        } else {
+            return $this->render('update', [
+                'user' => $user,
+                'profile' => $profile,
+            ]);
         }
-
-        return $this->render('update', [
-            'user' => $user,
-            'profile' => $profile,
-        ]);
 
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\User */
+/* @var $user common\models\User */
 /* @var $profile common\models\UserProfile */
 /* @var $form yii\widgets\ActiveForm */
 
@@ -13,23 +13,29 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->errorSummary($model); ?>
+        <?= $form->errorSummary($user); ?>
 
-        <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'readonly' => !$model->isNewRecord]) ?>
+        <?= $form->errorSummary($profile); ?>
 
-        <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($user, 'username')->textInput(['maxlength' => true, 'readonly' => !$user->isNewRecord]) ?>
 
-        <?= ($model->isNewRecord) ? $form->field($model, 'password')->passwordInput() : '' ?>
+        <?= $form->field($profile, 'firstname')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'status')->dropDownList(
-            $model->getUserStatusDropdown(),
+        <?= $form->field($profile, 'lastname')->textInput(['maxlength' => true]) ?>
+
+        <?= $form->field($user, 'email')->textInput(['maxlength' => true]) ?>
+
+        <?= ($user->isNewRecord) ? $form->field($user, 'password')->passwordInput() : '' ?>
+
+        <?= $form->field($user, 'status')->dropDownList(
+            $user->getUserStatusDropdown(),
             ['prompt'=>' - User Status - ']
         ) ?>
 
-        <?= (!$model->isNewRecord) ? Html::a('Change Password!', ['user/change-user-password', 'id' => $model->id]) . '<br /><br />' : '' ?>
+        <?= (!$user->isNewRecord) ? Html::a('Change Password!', ['user/change-user-password', 'id' => $user->id]) . '<br /><br />' : '' ?>
 
         <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($user->isNewRecord ? 'Create' : 'Update', ['class' => $user->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
 
     <?php ActiveForm::end(); ?>

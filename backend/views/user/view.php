@@ -15,11 +15,22 @@ $this->params['breadcrumbs'][] = $model->username;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
+            [
+                'attribute' => 'sponsor_id',
+                'label' => 'Sponsor',
+                'format' => 'raw',
+                'value' => isset($model->sponsor_id) ? Html::a($model->sponsor->username, ['/user/view', 'id' => $model->sponsor_id]) : null,
+            ],
             'id',
             'username',
             'userProfile.firstname',
             'userProfile.lastname',
-            'email:email',
+            [
+                'attribute' => 'phone',
+                'label' => 'Phone',
+                'format' => 'raw',
+                'value' => isset($user->userProfile->phone) ? \common\components\Helper::tel($user->userProfile->phone) : null,
+            ],
             //'auth_key',
             //'password_hash',
             //'password_reset_token',

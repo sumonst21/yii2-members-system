@@ -24,6 +24,11 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
     <?= DetailView::widget([
         'model' => $user,
         'attributes' => [
+            [
+                'attribute' => 'sponsor_id',
+                'label' => 'Sponsor',
+                'value' => $user->sponsor_id ? $user->sponsor_id->username : null,
+            ],
             'username',
             'email:email',
             'userProfile.firstname',
@@ -32,7 +37,7 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->userProfile->phone) ? \common\components\Helper::tel($user->userProfile->phone) : '<span class="field-not-set">(not set)</span>',
+                'value' => isset($user->userProfile->phone) ? \common\components\Helper::tel($user->userProfile->phone) : null,
             ],
             'userProfile.skype',
             [
@@ -40,12 +45,8 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
                 'label' => 'Status',
                 'value' => $user->userStatus,
             ],
-            [
-                'attribute' => 'sponsor_id',
-                'label' => 'Sponsor',
-                'value' => $user->sponsor_id ? $user->sponsor_id->username : null,
-            ],
             'created_at:datetime',
+            // Fix to get correct last updated timestamp, depending on which was updated last (user or user_profile)
             [
                 'label' => 'Updated At',
                 'value' => ($user->userProfile->updated_at > $user->updated_at) ? $user->userProfile->updated_at : $user->updated_at,

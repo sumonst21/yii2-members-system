@@ -5,15 +5,16 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Update User: ' . $model->username;
+$this->title = 'Update User: ' . $user->username;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $user->username, 'url' => ['view', 'id' => $user->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="user-update">
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'user' => $user,
+        'profile' => $profile,
     ]) ?>
 
 </div>
