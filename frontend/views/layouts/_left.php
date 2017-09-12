@@ -5,6 +5,8 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+use dmstr\widgets\Menu;
 ?>
 <aside class="main-sidebar">
 
@@ -33,23 +35,21 @@ use yii\helpers\Url;
         </form>
         <!-- /.search form -->
 
-        <?= dmstr\widgets\Menu::widget(
-            [
-                'options' => ['class' => 'sidebar-menu'],
-                'items' => [
-                    ['label' => 'Menu', 'options' => ['class' => 'header']],
-                    [
-                        'label' => 'User',
-                        'icon' => 'share',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => 'Profile', 'icon' => 'file-code-o', 'url' => ['/user/index']],
-                            ['label' => 'Settings', 'icon' => 'dashboard', 'url' => ['/user/settings']],
-                        ],
+        <?= Menu::widget([
+            'options' => ['class' => 'sidebar-menu'],
+            'items' => [
+                ['label' => 'Menu', 'options' => ['class' => 'header']],
+                [
+                    'label' => 'User',
+                    'icon' => 'share',
+                    'url' => '#',
+                    'items' => [
+                        ['label' => 'Profile', 'icon' => 'file-code-o', 'url' => ['/user/index']],
+                        ['label' => 'Settings', 'icon' => 'dashboard', 'url' => ['/user/settings']],
                     ],
                 ],
-            ]
-        ) ?>
+            ],
+        ]) ?>
 
     </section>
 
