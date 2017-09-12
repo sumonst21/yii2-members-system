@@ -7,6 +7,56 @@ use yii\helpers\Html;
 
 class Helper
 {
+    public static function dd($message, $vardump = false)
+    {
+        if ( !$vardump ) {
+            die('<pre>' . print_r($message, true) . '</pre>');
+        } else {
+            die('<pre>' . var_dump($message) . '</pre>');
+        }
+    }
+
+    public static function log($data, $filename = null, $append = true)
+    {
+        if ( ! isset($filename) ) {
+            $filename = Yii::getAlias('@app/runtime/logs/helper.log');
+        } else {
+            $filename = Yii::getAlias($filename);
+        }
+
+        $before = '[' . date('m-d-Y h:i:s') . '] ';
+        $after = PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
+
+        $requestedDir = pathinfo($filename, PATHINFO_DIRNAME);
+
+        if ( ! is_dir($requestedDir) ) {
+            FileHelper::createDirectory($requestedDir, 0755, true);
+        }
+
+        $formattedData = null;
+
+        if ( is_string($data) ) {
+            $formattedData = $data;
+        } elseif ( is_array($data) || is_object($data) ) {
+            $formattedData = PHP_EOL . print_r($data, true);
+        } else {
+            ob_start();
+            var_dump($data);
+            $formattedData = PHP_EOL . ob_get_clean();
+        }
+
+        $formattedData = $before . $formattedData . $after;
+
+        $result = null;
+        if ( $append ) {
+            $result = file_put_contents($filename, $formattedData, LOCK_EX | FILE_APPEND);
+        } else {
+            $result = file_put_contents($filename, $formattedData, LOCK_EX);
+        }
+
+        return isset($result) ? $result : false;
+    }
+
     public static function tel($text, $phone = null, $options = [])
     {
         $phone = ($phone === null) ? $text : $phone;
