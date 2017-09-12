@@ -1,7 +1,9 @@
 <?php
 namespace backend\components;
 
-class BaseController extends \yii\web\Controller
+use \yii\web\Controller;
+
+class BaseController extends Controller
 {
 
 }

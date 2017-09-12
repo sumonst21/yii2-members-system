@@ -79,7 +79,7 @@ class AdminController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new \backend\models\CreateAdminForm;
+        $model = new CreateAdminForm;
 
         if ($model->load(Yii::$app->request->post()))
         {

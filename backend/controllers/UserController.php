@@ -13,6 +13,7 @@ use backend\models\CreateUserForm;
 
 use common\models\User;
 use common\models\UserSearch;
+use common\models\UserProfile;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -100,7 +101,7 @@ class UserController extends BaseController
     public function actionUpdate($id)
     {
         $user = $this->findModel($id);
-        $profile = \common\models\UserProfile::find(['user_id' => $user->id])->one();
+        $profile = UserProfile::find(['user_id' => $user->id])->one();
 
         if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post()) && $user->save() && $profile->save()) {
             return $this->redirect(['view', 'id' => $user->id]);
