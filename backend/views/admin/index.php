@@ -6,6 +6,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
+
 use backend\models\Admin;
 
 $this->title = 'Admins';
@@ -14,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="admin-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <?php Pjax::begin() ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -62,6 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+
+    <?php Pjax::end(); ?>
 
     <p>
         <?= Html::a('Create Admin', ['create'], ['class' => 'btn btn-success']) ?>
