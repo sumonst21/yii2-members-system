@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+
 use common\models\User;
 
 $this->title = 'Delete Account';
