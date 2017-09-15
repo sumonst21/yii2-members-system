@@ -4,5 +4,6 @@
     "vendor/yiisoft/yii2/assets/yii.activeForm.js",
     "vendor/yiisoft/yii2/assets/yii.gridView.js",
     "vendor/yiisoft/yii2/assets/yii.captcha.js",
-    "vendor/almasaeed2010/adminlte/dist/js/app.js"
+    "vendor/almasaeed2010/adminlte/dist/js/app.js",
+    "vendor/bower/jquery.inputmask/dist/jquery.inputmask.bundle.js"
 ]
