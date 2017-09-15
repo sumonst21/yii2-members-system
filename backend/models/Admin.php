@@ -316,4 +316,21 @@ class Admin extends ActiveRecord implements IdentityInterface
     {
         return self::getAdminStatusConst();
     }
+
+    public function canEditRole()
+    {
+        if ( Yii::$app->user->identity->role == Admin::ROLE_ROOT ) {
+            return true;
+        }
+
+        if ( ! $this->isNewRecord ) {
+            return ( Yii::$app->user->identity->role > $this->role ) ? true : false;
+        }
+
+        if ( $this->isNewRecord ) {
+            return ( Yii::$app->user->identity->role > Admin::ROLE_ADMIN ) ? true : false;
+        }
+
+        return false;
+    }
 }

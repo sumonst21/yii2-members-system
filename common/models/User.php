@@ -5,6 +5,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 use common\models\UserProfile;
 
@@ -53,6 +54,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            ['sponsor_id', 'integer'],
+            ['sponsor_id', 'default', 'value' => null],
+
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
@@ -327,5 +331,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function getReferrals()
     {
         return $this->hasMany(User::className(), ['sponsor_id' => 'id']);
+    }
+
+    public function sponsorDropdown()
+    {
+        $sponsorList = $this->isNewRecord ? User::find()->select(['id', 'username'])->where(['status' => 10])->all() : User::find()->select(['id', 'username'])->where(['status' => 10])->andWhere(['!=', 'id', $this->id])->all();
+        return ArrayHelper::map($sponsorList, 'id', 'username');
+    }
+
+    public function canViewProfile()
+    {
+        return ( $this->profile->share_details == true );
     }
 }

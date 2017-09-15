@@ -11,6 +11,7 @@ use backend\models\Admin;
  */
 class CreateAdminForm extends Admin
 {
+    public $id;
     public $username;
     public $firstname;
     public $lastname;
@@ -62,26 +63,28 @@ class CreateAdminForm extends Admin
      *
      * @return Admin|null the saved model or null if saving fails
      */
-    public function createAdmin()
+    public function createAdmin($validate = true)
     {
-        if ($this->validate())
-        {
-            $admin = new Admin();
-            $admin->firstname = $this->firstname;
-            $admin->lastname = $this->lastname;
-            $admin->username = $this->username;
-            $admin->email = $this->email;
-            $admin->role = $this->role;
-            $admin->status = $this->status;
-            $admin->setPassword($this->password);
-            $admin->generateAuthKey();
-
-            if ($admin->save()) {
-                return $admin;
-            }
+        if ( ($validate === true) && !$this->validate() ) {
+            return false;
         }
 
-        return null;
+        $admin = new Admin();
+        $admin->firstname = $this->firstname;
+        $admin->lastname = $this->lastname;
+        $admin->username = $this->username;
+        $admin->email = $this->email;
+        $admin->role = $this->role;
+        $admin->status = $this->status;
+        $admin->setPassword($this->password);
+        $admin->generateAuthKey();
+
+        if ($admin->save()) {
+            $this->id = $admin->id;
+            return $admin;
+        }
+
+        return false;
     }
 
 }

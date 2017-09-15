@@ -14,7 +14,7 @@ use backend\models\Admin;
 
         <?= $form->errorSummary($model); ?>
 
-        <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'readonly' => !$model->isNewRecord]) ?>
+        <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'readonly' => (!$model->isNewRecord && !Yii::$app->user->isRoot())]) ?>
 
         <?= $form->field($model, 'firstname')->textInput(['maxlength' => true]) ?>
 
@@ -24,26 +24,23 @@ use backend\models\Admin;
 
         <?= ($model->isNewRecord) ? $form->field($model, 'password')->passwordInput() : '' ?>
 
-        <?= $form->field($model, 'role')->dropDownList(
-            $model->getAdminRoleDropdown(),
-            ['prompt'=>' - Admin Role - ']
-        ) ?>
+        <?php if ( $model->canEditRole() ) { ?>
+            <?= $form->field($model, 'role')->dropDownList(
+                $model->getAdminRoleDropdown(),
+                ['prompt'=>' - Admin Role - ']
+            ) ?>
 
-        <?= $form->field($model, 'status')->dropDownList(
-            $model->getAdminStatusDropdown(),
-            ['prompt'=>' - Admin Status - ']
-        ) ?>
+            <?= $form->field($model, 'status')->dropDownList(
+                $model->getAdminStatusDropdown(),
+                ['prompt'=>' - Admin Status - ']
+            ) ?>
+        <?php } ?>
 
-        <?php
-        if ( ! $model->isNewRecord )
-        {
-            if ($model->id === Yii::$app->user->id) {
-                echo Html::a('Change Password', ['admin/change-password']);
-            } else {
-                echo Html::a('Change Password', ['admin/change-admin-password', 'id' => $model->id]);
-            }
-        }
-        ?>
+        <?php if ( ! $model->isNewRecord ) { ?>
+
+            <?= Html::a('Change Password', ($model->id === Yii::$app->user->id) ? ['admin/change-password'] : ['admin/change-admin-password', 'id' => $model->id]) ?>
+
+        <?php } ?>
 
         <div class="row">
             &nbsp;

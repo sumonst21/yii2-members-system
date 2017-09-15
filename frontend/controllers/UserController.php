@@ -46,108 +46,6 @@ class UserController extends BaseController
     }
 
     /**
-     * Lists all User models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $id = Yii::$app->user->id;
-
-        return $this->render('index', [
-            'user' => $this->findModel($id),
-            'profile' => UserProfile::findOne(['user_id' => $id]),
-        ]);
-    }
-
-    /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id = null)
-    {
-        if ( ! isset($id) ) {
-            $id = Yii::$app->user->id;
-        }
-
-        $user = User::findOne($id);
-        if ( ! $user ) {
-            throw new NotFoundHttpException("The user was not found.");
-        }
-
-        $profile = UserProfile::findOne(['user_id' => $id]);
-        if ( ! $profile ) {
-            throw new NotFoundHttpException("The profile was not found.");
-        }
-
-        return $this->render('view', [
-            'user' => $user,
-            'profile' => $profile,
-        ]);
-    }
-
-    /**
-     * Updates current users User and Profile model.
-     * If update is successful, the browser will be redirected to the 'profile' page.
-     * @return mixed
-     */
-    public function actionUpdate($id=null)
-    {
-        if ( isset($id) && ($id != Yii::$app->user->id) ) {
-            throw new ForbiddenHttpException('You can only update your own account!');
-        }
-
-        $id = Yii::$app->user->id;
-        $user = User::findOne($id);
-
-        if ( ! $user ) {
-            throw new NotFoundHttpException("The user was not found.");
-        }
-
-        $profile = UserProfile::findOne($user->profile->id);
-        if ( ! $profile ) {
-            throw new NotFoundHttpException("The profile was not found.");
-        }
-
-        if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post()) && $user->save() && $profile->save())
-        {
-            Yii::$app->session->setFlash('success', 'Your account has been updated!');
-            return $this->redirect(['view', 'id' => $user->id]);
-        } else {
-            return $this->render('update', [
-                'user' => $user,
-                'profile' => $profile,
-            ]);
-        }
-
-    }
-
-    /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        if ( isset($id) && ($id != Yii::$app->user->id) ) {
-            throw new ForbiddenHttpException('You can only delete your own account!');
-        }
-
-        $model = $this->findModel($id);
-        $model->status = User::STATUS_DELETED;
-
-        if ( ! $model->validate() || ! $model->save() ) {
-            throw new HttpException(500, 'Error deleting account!');
-        }
-
-        Yii::$app->user->logout();
-        Yii::$app->session->setFlash('success', 'Your account has been deleted!');
-
-        return $this->goHome();
-    }
-
-    /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -163,52 +61,28 @@ class UserController extends BaseController
         }
     }
 
-    // --- Added ---
-
     /**
-     * Change User password.
-     *
-     * @param integer id
+     * Show the user profile info
      * @return mixed
-     * @throws BadRequestHttpException
      */
-    public function actionChangePassword()
+    public function actionIndex()
     {
-        $id = Yii::$app->user->id;
-
-        try {
-            $model = new ChangePasswordForm($id);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
-        {
-            Yii::$app->session->setFlash('success', 'Password Changed!');
-            $model->resetForm();
-        }
-
-        return $this->render('changePassword', [
-            'model' => $model,
+        return $this->render('index', [
+            'model' => $this->findModel(Yii::$app->user->id),
         ]);
     }
 
     /**
-     * Displays current users profile.
+     * Displays a single User model.
+     * @param integer $id
      * @return mixed
      */
-    public function actionProfile()
+    public function actionView($id = null)
     {
-        $id = Yii::$app->user->id;
-        $user = User::findOne($id);
+        $model = $this->findModel($id);
 
-        if ( ! $user ) {
-            throw new NotFoundHttpException("The user was not found.");
-        }
-
-        return $this->render('profile', [
-            'user' => $user,
-            'profile' => UserProfile::findOne(['user_id' => $id]),
+        return $this->render('view', [
+            'model' => $model
         ]);
     }
 
@@ -217,41 +91,86 @@ class UserController extends BaseController
      * If update is successful, the browser will be redirected to the 'profile' page.
      * @return mixed
      */
-    public function actionSettings()
+    public function actionUpdate($id = null)
     {
-        $id = Yii::$app->user->id;
+        $model = $this->findModel(Yii::$app->user->id);
 
-        $user = User::findOne($id);
-        if ( ! $user ) {
-            throw new NotFoundHttpException("The user was not found.");
-        }
-
-        $profile = UserProfile::findOne($user->profile->id);
-        if ( ! $profile ) {
-            throw new NotFoundHttpException("The profile was not found.");
-        }
-
-        if ( $profile->load(Yii::$app->request->post()) )
+        if ( $model->load(Yii::$app->request->post()) && $model->profile->load(Yii::$app->request->post()) )
         {
-            if ( $profile->validate() && $profile->save(false) ) {
-                Yii::$app->session->setFlash('success', 'Your settings have been saved!');
+            if ( $model->save() && $model->profile->save() ) {
+                Yii::$app->session->setFlash('success', 'Your account has been updated!');
+                return $this->goHome();
             }
         }
 
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing User model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @return mixed
+     */
+    public function actionDelete()
+    {
+        $model = $this->findModel(Yii::$app->user->id);
+        $model->status = User::STATUS_DELETED;
+
+        if ( ! $model->save(false) ) {
+            throw new HttpException(500, 'Error deleting account!');
+        }
+
+        Yii::$app->user->logout();
+        Yii::$app->session->setFlash('success', 'Your account has been deleted!');
+
+        return $this->goHome();
+    }
+
+    /**
+     * Change User password.
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionChangePassword()
+    {
+        $model = new ChangePasswordForm(Yii::$app->user->id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword())
+        {
+            Yii::$app->session->setFlash('success', 'Your password has been changed!');
+            return $this->goHome();
+        }
+
+        return $this->render('changePassword', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates current user's settings.
+     * @return mixed
+     */
+    public function actionSettings()
+    {
+        $model = $this->findModel(Yii::$app->user->id);
+
+        if ( $model->profile->load(Yii::$app->request->post()) && $model->profile->save() ) {
+            Yii::$app->session->setFlash('success', 'Your settings have been saved!');
+        }
+
         return $this->render('settings', [
-            'user' => $user,
-            'profile' => $profile,
+            'model' => $model->profile,
         ]);
     }
 
     public function actionDeleteAccount()
     {
-        $model = User::findOne(Yii::$app->user->id);
+        $model = $this->findModel(Yii::$app->user->id);
 
-        if ( ! $model ) {
-            throw new NotFoundHttpException("The user was not found.");
-        }
-
-        return $this->render('deleteAccount', ['model' => $model]);
+        return $this->render('deleteAccount', [
+            'model' => $model
+        ]);
     }
 }

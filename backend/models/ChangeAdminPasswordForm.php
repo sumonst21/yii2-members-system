@@ -17,6 +17,7 @@ class ChangeAdminPasswordForm extends Model
     public $username;
     public $password;
     public $confirm_password;
+    public $role;
 
     /**
      * @var \common\models\User
@@ -32,18 +33,13 @@ class ChangeAdminPasswordForm extends Model
      */
     public function __construct($id, $config = [])
     {
-        if ( Yii::$app->user->role !== Admin::ROLE_ROOT ) {
-            throw new ForbiddenHttpException('Only Root Administrators may change other admin passwords!');
-        }
-
-        $this->_user = Admin::findIdentity($id);
-
-        if (!$this->_user) {
-            throw new InvalidParamException('Unable to find admin!');
+        if (($this->_user = Admin::findOne($id)) === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
         $this->id = $this->_user->id;
         $this->username = $this->_user->username;
+        $this->role = $this->_user->role;
         parent::__construct($config);
     }
 
@@ -64,8 +60,12 @@ class ChangeAdminPasswordForm extends Model
      *
      * @return boolean if password was changed.
      */
-    public function changePassword()
+    public function changePassword($validate = true)
     {
+        if ( ($validate === true) && !$this->validate() ) {
+            return false;
+        }
+
         $user = $this->_user;
         $user->setPassword($this->password);
 

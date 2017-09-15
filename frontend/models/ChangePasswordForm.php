@@ -4,6 +4,8 @@ namespace frontend\models;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\base\Model;
+use yii\web\NotFoundHttpException;
+
 use common\models\User;
 
 /**
@@ -22,17 +24,16 @@ class ChangePasswordForm extends Model
     private $_user;
 
     /**
-     * Creates a form model given a token.
+     * Creates a form model given a user id.
      *
-     * @param  string                          $token
+     * @param  integer                         $id the user id
      * @param  array                           $config name-value pairs that will be used to initialize the object properties
-     * @throws \yii\base\InvalidParamException if token is empty or not valid
+     * @throws \yii\base\InvalidParamException if id is empty or not valid
      */
     public function __construct($id, $config = [])
     {
-        $this->_user = User::findIdentity($id);
-        if ( ! $this->_user ) {
-            throw new InvalidParamException('Unable to find user!');
+        if (($this->_user = User::findOne($id)) === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
         $this->id = $this->_user->id;
@@ -52,25 +53,29 @@ class ChangePasswordForm extends Model
         ];
     }
 
+    public function validatePassword($attribute, $params)
+    {
+        $user = $this->_user;
+        if ( ! Yii::$app->getSecurity()->validatePassword($this->password, $user->password_hash) ) {
+            $this->addError($attribute, 'Your password is incorrect!');
+        }
+    }
+
     /**
      * Changes password.
      *
      * @return boolean if password was changed.
      */
-    public function changePassword()
+    public function changePassword($validate = true)
     {
+        if ( ($validate === true) && !$this->validate() ) {
+            return false;
+        }
+
         $user = $this->_user;
         $user->setPassword($this->new_password);
 
         return $user->save();
-    }
-
-    public function validatePassword($attribute, $params)
-    {
-        $user = $this->_user;
-        if ( ! Yii::$app->getSecurity()->validatePassword($this->password, $user->password_hash) ) {
-            $this->addError($attribute, 'You password is incorrect!');
-        }
     }
 
     public function resetForm()

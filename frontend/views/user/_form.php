@@ -1,13 +1,11 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $user common\models\User */
-/* @var $profile common\models\UserProfile */
+/* @var $model common\models\User */
 /* @var $form yii\widgets\ActiveForm */
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
 use yii\widgets\MaskedInput;
 ?>
 
@@ -15,28 +13,49 @@ use yii\widgets\MaskedInput;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->errorSummary($user); ?>
+        <?= $form->errorSummary($model); ?>
 
-    <?= $form->errorSummary($profile); ?>
+        <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'readonly' => !$model->isNewRecord]) ?>
 
-    <?= $form->field($profile, 'firstname')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'email')->input('email') ?>
 
-    <?= $form->field($profile, 'lastname')->textInput(['maxlength' => true]) ?>
+        <?php if ($model->isNewRecord) { ?>
 
-    <?= $form->field($user, 'email')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'password')->passwordInput() ?>
 
-    <?= $form->field($profile, 'phone')->widget(MaskedInput::className(), [
-        'mask' => '(999) 999-9999',
-    ]) ?>
+        <?php } ?>
 
-    <?= $form->field($profile, 'skype')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model->profile, 'firstname')->textInput(['maxlength' => true]) ?>
 
-    <p><?= ( ! $user->isNewRecord) ? Html::a('Change Password!', ['user/change-password']) . '</p><p>&nbsp;</p>' : '' ?></p>
+        <?= $form->field($model->profile, 'lastname')->textInput(['maxlength' => true]) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($user->isNewRecord ? 'Create' : 'Update', ['class' => $user->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a('Delete Account', 'delete-account', ['class' => 'btn btn-danger']) ?>
-    </div>
+        <?php if ( ! $model->isNewRecord ) { ?>
+
+            <?= $form->field($model->profile, 'phone')->widget(MaskedInput::className(), [
+                'mask' => '(999) 999-9999',
+            ]) ?>
+
+            <?= $form->field($model->profile, 'skype')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model->profile, 'address1')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model->profile, 'address2')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model->profile, 'city')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model->profile, 'state')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model->profile, 'zip')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model->profile, 'country')->textInput(['maxlength' => true]) ?>
+
+        <?php } ?>
+
+        <?= (!$model->isNewRecord) ? Html::a('Change Password!', ['user/change-password']) . '<br /><br />' : '' ?>
+
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
 
     <?php ActiveForm::end(); ?>
 

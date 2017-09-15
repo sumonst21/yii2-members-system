@@ -59,10 +59,25 @@ class Helper
 
     public static function tel($text, $phone = null, $options = [])
     {
+        if ( ! $text ) {
+            return null;
+        }
+
         $phone = ($phone === null) ? $text : $phone;
         $phone = mb_convert_kana($phone, 'a', 'UTF-8');
         $phone = preg_replace('~[^+0-9]+~', '', $phone);
         $options['href'] = 'tel:' . $phone;
+        return Html::tag('a', $text, $options);
+    }
+
+    public static function skype($text, $skypeId = null, $options = [])
+    {
+        if ( ! $text ) {
+            return null;
+        }
+
+        $skypeId = ($skypeId === null) ? $text : $skypeId;
+        $options['href'] = 'skype:' . $skypeId . '?userinfo';
         return Html::tag('a', $text, $options);
     }
 

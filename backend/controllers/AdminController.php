@@ -46,6 +46,22 @@ class AdminController extends BaseController
     }
 
     /**
+     * Finds the Admin model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Admin the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Admin::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
      * Lists all Admin models.
      * @return mixed
      */
@@ -79,13 +95,17 @@ class AdminController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new CreateAdminForm;
+        if ( ! (Yii::$app->user->role > Admin::ROLE_ADMIN) ) {
+            throw new ForbiddenHttpException('Only Super Admins and higher can create admin accounts!');
+        }
 
-        if ($model->load(Yii::$app->request->post()))
+        $model = new CreateAdminForm;
+        $model->loadDefaultValues();
+
+        if ($model->load(Yii::$app->request->post()) && $model->createAdmin())
         {
-            if ($admin = $model->createAdmin()) {
-                return $this->redirect(['view', 'id' => $admin->id]);
-            }
+            Yii::$app->session->setFlash('success', 'The admin account has been created!');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -103,13 +123,19 @@ class AdminController extends BaseController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ( (Yii::$app->user->id !== $model->id) && !(Yii::$app->user->role > $model->role) && (Yii::$app->user->role !== Admin::ROLE_ROOT) ) {
+            throw new ForbiddenHttpException('You do not have permission to modify this admin account!');
         }
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
+            Yii::$app->session->setFlash('success', 'The admin account has been updated!');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -122,31 +148,24 @@ class AdminController extends BaseController
     {
         $model = $this->findModel($id);
 
+        if ( !(Yii::$app->user->role > $model->role) || (Yii::$app->user->role !== Admin::ROLE_ROOT) ) {
+            throw new ForbiddenHttpException('You do not have permission to delete this admin account!');
+        }
+
         // can't delete your own account
-        if ( $model->id == Yii::$app->user->id ) {
+        if ( Yii::$app->user->id === $model->id ) {
             throw new ForbiddenHttpException('You do not have permission to delete your own Admin account!');
         }
 
         $model->status = Admin::STATUS_DELETED;
-        $model->update();
 
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Admin model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Admin the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Admin::findOne($id)) !== null) {
-            return $model;
+        if ( $model->update() ) {
+            Yii::$app->session->setFlash('success', 'The admin account has been deleted!');
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            Yii::$app->session->setFlash('error', 'Error deleting the admin account!');
         }
+
+        return $this->goHome();
     }
 
     /**
@@ -170,16 +189,12 @@ class AdminController extends BaseController
      */
     public function actionChangePassword()
     {
-        try {
-            $model = new ChangePasswordForm(Yii::$app->user->id);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
+        $model = new ChangePasswordForm(Yii::$app->user->id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword())
         {
             Yii::$app->session->setFlash('success', 'Password Changed!');
-            $model->resetForm();
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('changePassword', [
@@ -196,16 +211,16 @@ class AdminController extends BaseController
      */
     public function actionChangeAdminPassword($id)
     {
-        try {
-            $model = new ChangeAdminPasswordForm($id);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
+        $model = new ChangeAdminPasswordForm($id);
+
+        if ( ! (Yii::$app->user->role > $model->role) ) {
+            throw new ForbiddenHttpException('You do not have permission to change this account\'s password!');
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword())
         {
             Yii::$app->session->setFlash('success', 'Password Changed!');
-            $model->resetForm();
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('changeAdminPassword', [

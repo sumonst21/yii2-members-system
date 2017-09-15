@@ -4,8 +4,6 @@
 
 use yii\helpers\Html;
 
-use common\models\User;
-
 $this->title = 'Delete Account';
 $this->params['breadcrumbs'][] = ['label' => 'User', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -14,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>Are you sure you want to delete your account?</p>
 
-    <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+    <?= Html::a('Delete', 'delete', [
         'class' => 'btn btn-danger',
         'data' => [
             'confirm' => 'Are you sure you want to delete your account?',

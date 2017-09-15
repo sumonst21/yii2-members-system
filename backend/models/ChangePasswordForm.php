@@ -23,18 +23,16 @@ class ChangePasswordForm extends Model
     private $_user;
 
     /**
-     * Creates a form model given a token.
+     * Creates a form model given a user id.
      *
-     * @param  string                          $token
+     * @param  string                          $id
      * @param  array                           $config name-value pairs that will be used to initialize the object properties
      * @throws \yii\base\InvalidParamException if token is empty or not valid
      */
     public function __construct($id, $config = [])
     {
-        $this->_user = Admin::findIdentity($id);
-
-        if (!$this->_user) {
-            throw new InvalidParamException('Unable to find admin!');
+        if (($this->_user = Admin::findOne($id)) === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
         $this->id = $this->_user->id;
@@ -58,8 +56,12 @@ class ChangePasswordForm extends Model
      *
      * @return boolean if password was changed.
      */
-    public function changePassword()
+    public function changePassword($validate = true)
     {
+        if ( ($validate === true) && !$this->validate() ) {
+            return false;
+        }
+
         $user = $this->_user;
         $user->setPassword($this->new_password);
 

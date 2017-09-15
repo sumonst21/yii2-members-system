@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use backend\components\BaseController;
 use backend\models\ChangeUserPasswordForm;
 use backend\models\CreateUserForm;
+use backend\models\UpdateUserForm;
 
 use common\models\User;
 use common\models\UserSearch;
@@ -42,6 +43,22 @@ class UserController extends BaseController
                 ],
             ],
         ];
+    }
+
+    /**
+     * Finds the User model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return User the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = User::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     /**
@@ -79,12 +96,12 @@ class UserController extends BaseController
     public function actionCreate()
     {
         $model = new CreateUserForm;
+        $model->loadDefaultValues();
 
-        if ($model->load(Yii::$app->request->post()))
+        if ($model->load(Yii::$app->request->post()) && $model->createUser())
         {
-            if ($user = $model->createUser()) {
-                return $this->redirect(['view', 'id' => $user->id]);
-            }
+            Yii::$app->session->setFlash('success', 'The user account has been created!');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -100,17 +117,19 @@ class UserController extends BaseController
      */
     public function actionUpdate($id)
     {
-        $user = $this->findModel($id);
-        $profile = UserProfile::find(['user_id' => $user->id])->one();
+        $model = $this->findModel($id);
 
-        if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post()) && $user->save() && $profile->save()) {
-            return $this->redirect(['view', 'id' => $user->id]);
-        } else {
-            return $this->render('update', [
-                'user' => $user,
-                'profile' => $profile,
-            ]);
+        if ( $model->load(Yii::$app->request->post()) && $model->profile->load(Yii::$app->request->post()) )
+        {
+            if ( $model->save() && $model->profile->save() ) {
+                Yii::$app->session->setFlash('success', 'The user account has been updated!');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -127,22 +146,6 @@ class UserController extends BaseController
     }
 
     /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = User::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
-    /**
      * Change User password.
      *
      * @param integer id
@@ -151,16 +154,12 @@ class UserController extends BaseController
      */
     public function actionChangeUserPassword($id)
     {
-        try {
-            $model = new ChangeUserPasswordForm($id);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
+        $model = new ChangeUserPasswordForm($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword())
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword())
         {
             Yii::$app->session->setFlash('success', 'Password Changed!');
-            $model->resetForm();
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('changeUserPassword', [

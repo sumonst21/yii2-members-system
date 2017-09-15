@@ -118,4 +118,15 @@ class UserProfile extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+
+    /**
+     * Finds user by user id
+     *
+     * @param integer user id
+     * @return UserProfile|null
+     */
+    public static function findByUserId($id)
+    {
+        return static::findOne(['user_id' => $id]);
+    }
 }

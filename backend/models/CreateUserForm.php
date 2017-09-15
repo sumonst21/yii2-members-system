@@ -12,12 +12,17 @@ use common\models\UserProfile;
  */
 class CreateUserForm extends User
 {
+    public $id;
+
+    public $sponsor_id;
     public $username;
-    public $firstname;
-    public $lastname;
     public $email;
     public $password;
     public $status;
+    public $firstname;
+    public $lastname;
+    public $phone;
+    public $skype;
 
     /**
      * @inheritdoc
@@ -25,13 +30,13 @@ class CreateUserForm extends User
     public function rules()
     {
         return [
+            ['sponsor_id', 'integer'],
+            ['sponsor_id', 'default', 'value' => null],
+
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 4, 'max' => 20],
-
-            [['firstname', 'lastname'], 'filter', 'filter' => 'trim'],
-            [['firstname', 'lastname'], 'string', 'max' => 30],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
@@ -47,39 +52,74 @@ class CreateUserForm extends User
             ['status', 'default', 'value' => User::STATUS_ACTIVE],
             ['status', 'in', 'range' => [User::STATUS_ACTIVE, User::STATUS_DELETED, User::STATUS_PENDING, User::STATUS_BANNED]],
 
+            [['firstname', 'lastname'], 'filter', 'filter' => 'trim'],
+            [['firstname', 'lastname'], 'string', 'max' => 30],
+
+            [['phone', 'skype'], 'string', 'max' => 50],
+
             // handle annoying update action, setting our null columns to empty string
-            [['firstname', 'lastname'], 'default', 'value' => null],
+            [['firstname', 'lastname', 'phone', 'skype'], 'default', 'value' => null],
         ];
     }
 
     /**
      * Create User Account
      *
-     * @return User|null the saved model or null if saving fails
+     * @return User|false the saved model or false if saving fails
      */
-    public function createUser()
+    public function createUser($validate = true)
     {
-        if ($this->validate())
-        {
+        if ( ($validate === true) && !$this->validate() ) {
+            return false;
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+
             $user = new User();
             $user->username = $this->username;
             $user->email = $this->email;
             $user->status = $this->status;
             $user->setPassword($this->password);
             $user->generateAuthKey();
+            $user->sponsor_id = $this->sponsor_id;
 
-            if ($user->save())
-            {
-                $profile = new UserProfile;
-                $profile->user_id = $user->id;
-                $profile->firstname = $this->firstname;
-                $profile->lastname = $this->lastname;
-
-                return $profile->save() ? $user : null;
+            if ( ! $user->save() ) {
+                $transaction->rollBack();
+                return false;
             }
+
+            $profile = new UserProfile;
+            $profile->user_id = $user->id;
+            $profile->firstname = $this->firstname;
+            $profile->lastname = $this->lastname;
+            $profile->phone = $this->phone;
+            $profile->skype = $this->skype;
+
+            if ( ! $profile->save() ) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            $transaction->commit();
+
+            $this->id = $user->id;
+            return $user;
+
+        } catch (\Exception $e) {
+
+            $transaction->rollBack();
+            throw $e;
+
+        } catch (\Throwable $e) {
+
+            $transaction->rollBack();
+            throw $e;
+
         }
 
-        return null;
+        return false;
     }
 
 }

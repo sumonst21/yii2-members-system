@@ -25,21 +25,37 @@ $this->params['breadcrumbs'][] = $model->username;
             ],
             'id',
             'username',
-            'profile.firstname',
-            'profile.lastname',
+            'email:email',
             [
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->profile->phone) ? Helper::tel($user->profile->phone) : null,
+                'value' => isset($model->profile->phone) ? Helper::tel($model->profile->phone) : null,
             ],
-            //'auth_key',
-            //'password_hash',
-            //'password_reset_token',
-            //'validation_token',
+            [
+                'attribute' => 'skype',
+                'label' => 'Skype',
+                'format' => 'raw',
+                'value' => isset($model->profile->skype) ? Helper::skype($model->profile->skype) : null,
+            ],
+
+            'profile.firstname',
+            'profile.lastname',
+            'profile.address1',
+            'profile.address2',
+            'profile.city',
+            'profile.state',
+            'profile.zip',
+            'profile.country',
+
             'userStatus',
             'created_at:datetime',
-            'updated_at:datetime',
+            // Fix to get correct last updated timestamp, depending on which was updated last (user or user_profile)
+            [
+                'label' => 'Updated At',
+                'value' => ($model->profile->updated_at > $model->updated_at) ? $model->profile->updated_at : $model->updated_at,
+                'format' => 'datetime',
+            ],
         ],
     ]) ?>
 

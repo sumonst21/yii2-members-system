@@ -1,10 +1,8 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $user common\models\User */
-/* @var $profile common\models\UserProfile */
+/* @var $model common\models\User */
 
-use Yii;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -16,46 +14,51 @@ $this->params['breadcrumbs'][] = ['label' => 'User'];
 ?>
 <div class="user-view">
 
-    <p>
-        <?php
-        if ( Yii::$app->user->id === $user->id ) {
-            echo Html::a('Update', 'update', ['class' => 'btn btn-primary']);
-        }
-        ?>
-    </p>
-
     <?= DetailView::widget([
-        'model' => $user,
+        'model' => $model,
         'attributes' => [
             [
                 'attribute' => 'sponsor_id',
                 'label' => 'Sponsor',
-                'value' => $user->sponsor_id ? $user->sponsor_id->username : null,
+                'format' => 'raw',
+                'value' => isset($model->sponsor_id) ? Html::a($model->sponsor->username, ['/user/view', 'id' => $model->sponsor_id]) : null,
             ],
             'username',
             'email:email',
-            'profile.firstname',
-            'profile.lastname',
             [
                 'attribute' => 'phone',
                 'label' => 'Phone',
                 'format' => 'raw',
-                'value' => isset($user->profile->phone) ? Helper::tel($user->profile->phone) : null,
+                'value' => isset($model->profile->phone) ? Helper::tel($model->profile->phone) : null,
             ],
             'profile.skype',
-            [
-                'attribute' => 'status',
-                'label' => 'Status',
-                'value' => $user->userStatus,
-            ],
+
+            'profile.firstname',
+            'profile.lastname',
+            'profile.address1',
+            'profile.address2',
+            'profile.city',
+            'profile.state',
+            'profile.zip',
+            'profile.country',
+
+            'userStatus',
             'created_at:datetime',
             // Fix to get correct last updated timestamp, depending on which was updated last (user or user_profile)
             [
                 'label' => 'Updated At',
-                'value' => ($user->profile->updated_at > $user->updated_at) ? $user->profile->updated_at : $user->updated_at,
+                'value' => ($model->profile->updated_at > $model->updated_at) ? $model->profile->updated_at : $model->updated_at,
                 'format' => 'datetime',
             ],
         ],
     ]) ?>
+
+    <p>
+        <?php if ( Yii::$app->user->id === $model->id ) { ?>
+            <?= Html::a('Update', 'update', ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Delete Account', 'delete-account', ['class' => 'btn btn-danger']) ?><br /><br />
+            <?= Html::a('View profile as others see it', ['view', 'id' => $model->id]) ?>
+        <?php } ?>
+    </p>
 
 </div>

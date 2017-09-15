@@ -3,6 +3,7 @@ namespace backend\components;
 
 use Yii;
 use \yii\web\User as UserComponent;
+use backend\models\Admin;
 
 /**
  * Extended yii\web\User
@@ -45,5 +46,20 @@ class User extends UserComponent
     public function getRole()
     {
         return Yii::$app->user->identity->role;
+    }
+
+    public function isRoot()
+    {
+        return Yii::$app->user->identity->role >= Admin::ROLE_ROOT;
+    }
+
+    public function isSuper()
+    {
+        return Yii::$app->user->identity->role >= Admin::ROLE_SUPER;
+    }
+
+    public function isAdmin()
+    {
+        return Yii::$app->user->identity->role >= Admin::ROLE_ADMIN;
     }
 }
