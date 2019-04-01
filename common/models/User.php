@@ -5,9 +5,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
-use common\models\UserProfile;
 
 /**
  * User model
@@ -16,6 +14,7 @@ use common\models\UserProfile;
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
+ * @property string $verification_token
  * @property string $email
  * @property string $auth_key
  * @property integer $status
@@ -26,12 +25,12 @@ use common\models\UserProfile;
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_PENDING = 5;
+    const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-    const STATUS_BANNED = 99;
+
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -39,7 +38,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -49,51 +48,18 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            ['sponsor_id', 'integer'],
-            ['sponsor_id', 'default', 'value' => null],
-
-            ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 4, 'max' => 20],
-
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-            [['created_at', 'updated_at'], 'integer'],
-
-            ['status', 'integer'],
-            ['status', 'default', 'value' => User::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [User::STATUS_ACTIVE, User::STATUS_DELETED, User::STATUS_PENDING, User::STATUS_BANNED]],
+            ['status', 'default', 'value' => self::STATUS_INACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'email' => 'Email',
-            'sponsor_id' => 'Sponsor',
-            'userStatus' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
-    /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function findIdentity($id)
     {
@@ -101,11 +67,11 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['access_token' => $token]);
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**
@@ -138,6 +104,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Finds user by verification email token
+     *
+     * @param string $token verify email token
+     * @return static|null
+     */
+    public static function findByVerificationToken($token) {
+        return static::findOne([
+            'verification_token' => $token,
+            'status' => self::STATUS_INACTIVE
+        ]);
+    }
+
+    /**
      * Finds out if password reset token is valid
      *
      * @param string $token password reset token
@@ -155,7 +134,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -163,7 +142,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAuthKey()
     {
@@ -171,7 +150,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validateAuthKey($authKey)
     {
@@ -215,132 +194,16 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
+    public function generateEmailVerificationToken()
+    {
+        $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
     /**
      * Removes password reset token
      */
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
-    }
-
-    // ----- Added -----
-
-    /**
-     * Generates a validation token for validation required signup
-     */
-    public function generateValidationToken()
-    {
-        $this->validation_token = Yii::$app->security->generateRandomString() . '_' . time();
-    }
-
-    /**
-     * Removes a validation token for validation required signup
-     */
-    public function removeValidationToken()
-    {
-        $this->validation_token = null;
-    }
-
-    /**
-     * Finds pending user by validation token
-     *
-     * @param string $token account validation token
-     * @return static|null
-     */
-    public static function findByValidationToken($token)
-    {
-        return static::findOne([
-            'validation_token' => $token,
-            'status' => self::STATUS_PENDING,
-        ]);
-    }
-
-    /**
-     * Get a user's related profile
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProfile()
-    {
-        return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
-    }
-
-    /**
-     * Find an identity by ID and does not matter what their status is
-     */
-    public static function findAnyIdentity($id)
-    {
-        return static::findOne(['id' => $id]);
-    }
-
-    /**
-     * Finds user by email
-     *
-     * @param string $email
-     * @return static|null
-     */
-    public static function findByEmail($email)
-    {
-        return static::findOne(['email' => $email]);
-    }
-
-    /**
-     * Helper function to map User Status constants to name
-     */
-    public static function getUserStatusConst($key = null)
-    {
-        if ( $key !== null ) {
-            $array = self::getUserStatusConst();
-            return $array[$key];
-        }
-
-        return [
-            self::STATUS_DELETED => 'Deleted',
-            self::STATUS_PENDING => 'Pending',
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_BANNED => 'Banned'
-        ];
-    }
-
-    /**
-     * Get User Status for DetailView
-     */
-    public function getUserStatus() {
-        return self::getUserStatusConst($this->status);
-    }
-
-    /**
-     * Get User Status array for drop down menu
-     */
-    public function getUserStatusDropdown()
-    {
-        return self::getUserStatusConst();
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSponsor()
-    {
-        return $this->hasOne(User::className(), ['id' => 'sponsor_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReferrals()
-    {
-        return $this->hasMany(User::className(), ['sponsor_id' => 'id']);
-    }
-
-    public function sponsorDropdown()
-    {
-        $sponsorList = $this->isNewRecord ? User::find()->select(['id', 'username'])->where(['status' => 10])->all() : User::find()->select(['id', 'username'])->where(['status' => 10])->andWhere(['!=', 'id', $this->id])->all();
-        return ArrayHelper::map($sponsorList, 'id', 'username');
-    }
-
-    public function canViewProfile()
-    {
-        return ( $this->profile->share_details == true );
     }
 }

@@ -2,19 +2,18 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
-use backend\components\BaseController;
-use backend\models\AdminLoginForm;
+use common\models\LoginForm;
 
 /**
  * Site controller
  */
-class SiteController extends BaseController
+class SiteController extends Controller
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -27,6 +26,7 @@ class SiteController extends BaseController
                         'allow' => true,
                     ],
                     [
+                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -42,7 +42,7 @@ class SiteController extends BaseController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function actions()
     {
@@ -74,12 +74,12 @@ class SiteController extends BaseController
             return $this->goHome();
         }
 
-        $this->layout = '//no-sidebar';
-
-        $model = new AdminLoginForm();
+        $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
+            $model->password = '';
+
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -93,15 +93,8 @@ class SiteController extends BaseController
      */
     public function actionLogout()
     {
-        if (Yii::$app->user->logout()) {
-            Yii::$app->session->setFlash('success', 'You have been logged out!');
-        }
+        Yii::$app->user->logout();
 
         return $this->goHome();
     }
-
-    // ----- Added -----
-
-
-
 }

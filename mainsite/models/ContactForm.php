@@ -1,6 +1,6 @@
 <?php
 
-namespace mainsite\models;
+namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
@@ -18,7 +18,7 @@ class ContactForm extends Model
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -33,7 +33,7 @@ class ContactForm extends Model
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

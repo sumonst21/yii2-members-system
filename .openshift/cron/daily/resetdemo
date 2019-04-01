@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd $REPO_DIR
-php yii demo/reset
