@@ -1,19 +1,20 @@
 <?php
-
-
 namespace frontend\models;
 
 use Yii;
-use common\models\User;
 use yii\base\Model;
 
+use common\models\User;
+
+/**
+ * Resend verification email form
+ */
 class ResendVerificationEmailForm extends Model
 {
     /**
      * @var string
      */
     public $email;
-
 
     /**
      * {@inheritdoc}

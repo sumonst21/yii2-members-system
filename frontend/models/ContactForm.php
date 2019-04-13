@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\models;
 
 use Yii;
@@ -15,7 +14,6 @@ class ContactForm extends Model
     public $subject;
     public $body;
     public $verifyCode;
-
 
     /**
      * {@inheritdoc}

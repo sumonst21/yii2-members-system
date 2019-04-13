@@ -2,10 +2,11 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\web\Controller;
+
+use backend\models\AdminLoginForm;
 
 /**
  * Site controller
@@ -26,7 +27,6 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -70,20 +70,21 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
+        if ( ! Yii::$app->user->isGuest ) {
             return $this->goHome();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
+        $this->layout = '//no-sidebar';
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+        $model = new AdminLoginForm();
+
+        if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
+            return $this->goBack();
         }
+
+        return $this->render('login', [
+            'model' => $model
+        ]);
     }
 
     /**
@@ -93,8 +94,11 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        if ( Yii::$app->user->logout() ) {
+            Yii::$app->session->setFlash('success', 'You have been logged out!');
+        }
 
         return $this->goHome();
     }
+
 }

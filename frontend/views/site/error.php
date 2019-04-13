@@ -8,8 +8,9 @@
 use yii\helpers\Html;
 
 $this->title = $name;
+$this->context->layout = 'no-sidebar';
 ?>
-<div class="site-error">
+<div class="container site-error">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

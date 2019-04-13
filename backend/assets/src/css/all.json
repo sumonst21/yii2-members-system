@@ -1,0 +1,5 @@
+[
+    "vendor/almasaeed2010/adminlte/dist/css/AdminLTE.css",
+    "vendor/almasaeed2010/adminlte/dist/css/skins/skin-black.css",
+    "backend/assets/src/css/bin/yii.css"
+]

@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\models;
 
 use common\models\User;
@@ -18,7 +17,6 @@ class VerifyEmailForm extends Model
      */
     private $_user;
 
-
     /**
      * Creates a form model with given token.
      *
@@ -28,13 +26,16 @@ class VerifyEmailForm extends Model
      */
     public function __construct($token, array $config = [])
     {
-        if (empty($token) || !is_string($token)) {
+        if ( empty($token) || !is_string($token) ) {
             throw new InvalidArgumentException('Verify email token cannot be blank.');
         }
+
         $this->_user = User::findByVerificationToken($token);
-        if (!$this->_user) {
+
+        if ( ! $this->_user ) {
             throw new InvalidArgumentException('Wrong verify email token.');
         }
+
         parent::__construct($config);
     }
 
@@ -47,6 +48,8 @@ class VerifyEmailForm extends Model
     {
         $user = $this->_user;
         $user->status = User::STATUS_ACTIVE;
+        $user->verification_token = null;
+
         return $user->save(false) ? $user : null;
     }
 }

@@ -5,7 +5,10 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
+
+use common\models\UserProfile;
 
 /**
  * User model
@@ -27,7 +30,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
+    const STATUS_BANNED = 99;
 
     /**
      * {@inheritdoc}
@@ -53,6 +56,20 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            ['sponsor_id', 'integer'],
+            ['sponsor_id', 'default', 'value' => null],
+
+            ['username', 'filter', 'filter' => 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'string', 'min' => 4, 'max' => 20],
+
+            ['email', 'filter', 'filter' => 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
@@ -71,7 +88,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['access_token' => $token]);
     }
 
     /**
@@ -83,6 +100,17 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * Finds any user by username, even soft-deleted, inactive, and banned!
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findAnyByUsername($username)
+    {
+        return static::findOne(['username' => $username]);
     }
 
     /**
@@ -205,5 +233,134 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    // ----- Added -----
+
+    /**
+     * Find an identity by ID and does not matter what their status is
+     */
+    public static function findAnyIdentity($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+
+    /**
+     * Get a user's related profile
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(UserProfile::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Finds user by email
+     *
+     * @param string $email
+     * @return static|null
+     */
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
+    /**
+     * Helper function to map User Status constants to name
+     */
+    public static function getUserStatusConst($key = null)
+    {
+        if ( $key !== null ) {
+            $array = self::getUserStatusConst();
+            return $array[$key];
+        }
+
+        return [
+            self::STATUS_DELETED => 'Deleted',
+            self::STATUS_INACTIVE => 'Inactive',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_BANNED => 'Banned'
+        ];
+    }
+
+    /**
+     * Get User Status for DetailView
+     */
+    public function getUserStatus() {
+        return self::getUserStatusConst($this->status);
+    }
+
+    /**
+     * Get User Status array for drop down menu
+     */
+    public function getUserStatusDropdown()
+    {
+        return self::getUserStatusConst();
+    }
+
+    public static function statusToColor($status)
+    {
+        switch (strtolower($status))
+        {
+            case 'active':
+                return 'green';
+                break;
+            case 'inactive':
+                return 'orange';
+                break;
+            case 'banned':
+                return 'red';
+                break;
+            case 'deleted':
+                return 'dark-grey';
+                break;
+            default:
+                return 'black';
+        }
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSponsor()
+    {
+        return $this->hasOne(User::className(), ['id' => 'sponsor_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReferrals()
+    {
+        return $this->hasMany(User::className(), ['sponsor_id' => 'id']);
+    }
+
+    public function sponsorDropdown()
+    {
+        $sponsorList = User::find()->select(['id', 'username'])->where(['status' => self::STATUS_ACTIVE]);
+
+        if ( ! $this->isNewRecord ) {
+            $sponsorList = $sponsorList->andWhere(['!=', 'id', $this->id]);
+        }
+
+        $sponsorList = $sponsorList->all();
+
+        return ArrayHelper::map($sponsorList, 'id', 'username');
+    }
+
+    public function shareDetailsPublic()
+    {
+        return ( $this->profile->share_details_public == true );
+    }
+
+    public function shareDetailsTeam()
+    {
+        return ( $this->profile->share_details_team == true );
+    }
+
+    public function isOnTeam()
+    {
+        return ( (isset(Yii::$app->user->sponsor) && Yii::$app->user->sponsor->id === $this->id) || (Yii::$app->user->id === $this->sponsor_id) );
     }
 }

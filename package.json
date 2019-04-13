@@ -1,0 +1,35 @@
+{
+  "name": "yii2-members-system",
+  "version": "2.2.0",
+  "description": "Yii2 Members System",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WadeShuler/yii2-members-system.git"
+  },
+  "main": "",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-bump": "^0.8.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-compress": "^1.4.3",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^2.2.0",
+    "grunt-contrib-less": "^1.4.0",
+    "grunt-contrib-uglify": "^2.2.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-sass": "^2.0.0",
+    "grunt-sass-import": "^0.2.2",
+    "grunt-typescript": "^0.8.0",
+    "jit-grunt": "^0.10.0",
+    "time-grunt": "^1.4.0",
+    "typescript": "^2.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wade Shuler",
+  "license": "MIT"
+}

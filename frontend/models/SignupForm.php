@@ -4,6 +4,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use common\models\UserProfile;
 
 /**
  * Signup form
@@ -13,7 +14,8 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
-
+    public $confirmPassword;
+    public $sponsor_id;
 
     /**
      * {@inheritdoc}
@@ -34,6 +36,13 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+
+            ['confirmPassword', 'required'],
+            ['confirmPassword', 'compare', 'compareAttribute' => 'password', 'message' => 'Passwords do not match'],
+            ['confirmPassword', 'string', 'min' => 6],
+
+            ['sponsor_id', 'integer'],
+            [['sponsor_id'], 'default', 'value' => null],
         ];
     }
 
@@ -42,21 +51,38 @@ class SignupForm extends Model
      *
      * @return bool whether the creating new account was successful and email was sent
      */
-    public function signup()
-    {
-        if (!$this->validate()) {
-            return null;
-        }
-        
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
-        return $user->save() && $this->sendEmail($user);
+     public function signup()
+     {
+         if ( ! $this->validate() ) {
+             return false;
+         }
 
-    }
+         $user = new User();
+         $user->username = $this->username;
+         $user->email = $this->email;
+
+         if ( isset($this->sponsor_id) ) {
+             $user->sponsor_id = $this->sponsor_id;
+         }
+
+         if ( Yii::$app->params['signupValidation'] === true )
+         {
+             $user->status = User::STATUS_INACTIVE;
+             $user->generateEmailVerificationToken();
+         }
+
+         $user->setPassword($this->password);
+         $user->generateAuthKey();
+
+         if ( $user->save() )
+         {
+             $profile = new UserProfile();
+             $profile->user_id = $user->id;
+             return $profile->save() && $this->sendEmail($user);
+         }
+
+         return false;
+     }
 
     /**
      * Sends confirmation email to user
@@ -65,15 +91,20 @@ class SignupForm extends Model
      */
     protected function sendEmail($user)
     {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
+        if ( Yii::$app->params['signupValidation'] === true )
+        {
+            return Yii::$app
+                ->mailer
+                ->compose(
+                    ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
+                    ['user' => $user]
+                )
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ->setTo($this->email)
+                ->setSubject('Account registration at ' . Yii::$app->name)
+                ->send();
+        }
+
+        return true;
     }
 }

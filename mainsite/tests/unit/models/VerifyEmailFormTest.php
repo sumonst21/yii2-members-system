@@ -1,14 +1,14 @@
 <?php
 
-namespace frontend\tests\unit\models;
+namespace mainsite\tests\unit\models;
 
 use common\fixtures\UserFixture;
-use frontend\models\VerifyEmailForm;
+use mainsite\models\VerifyEmailForm;
 
 class VerifyEmailFormTest extends \Codeception\Test\Unit
 {
     /**
-     * @var \frontend\tests\UnitTester
+     * @var \mainsite\tests\UnitTester
      */
     protected $tester;
 
