@@ -7,35 +7,25 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Reset Password';
+$this->title = 'Reset password';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="container site-reset-password">
-    <div class="single-page-content">
+<div class="site-reset-password">
+    <h1><?= Html::encode($this->title) ?></h1>
 
-        <h1><?= Html::encode($this->title) ?></h1>
+    <p>Please choose your new password:</p>
 
-        <div class="center-box">
-            <p align="center">Please choose your new password</p>
+    <div class="row">
+        <div class="col-lg-5">
+            <?php $form = ActiveForm::begin(['id' => 'reset-password-form']); ?>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <?php $form = ActiveForm::begin(['id' => 'reset-password-form']); ?>
+                <?= $form->field($model, 'password')->passwordInput(['autofocus' => true]) ?>
 
-                        <?= $form->field($model, 'password')->passwordInput(['autofocus' => true]) ?>
-
-                        <?= $form->field($model, 'confirmPassword')->passwordInput() ?>
-
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <?= Html::submitButton('Change Password', ['class' => 'btn btn-primary pull-right']) ?>
-                            </div>
-                        </div>
-
-                    <?php ActiveForm::end(); ?>
+                <div class="form-group">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-primary']) ?>
                 </div>
-            </div>
-        </div>
 
+            <?php ActiveForm::end(); ?>
+        </div>
     </div>
 </div>

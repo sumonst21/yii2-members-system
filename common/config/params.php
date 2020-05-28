@@ -2,7 +2,7 @@
 return [
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
-    'contactEmail' => 'contact@example.com',
-    'user.passwordResetTokenExpire' => 48 * 60 * 60,
-    'signupValidation' => true,
+    'senderEmail' => 'noreply@example.com',
+    'senderName' => 'Example.com mailer',
+    'user.passwordResetTokenExpire' => 3600,
 ];
