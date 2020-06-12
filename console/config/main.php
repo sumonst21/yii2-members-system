@@ -1,12 +1,10 @@
 <?php
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
-    require __DIR__ . '/../../common/config/params-local.php',
     require __DIR__ . '/params.php',
-    require __DIR__ . '/params-local.php'
 );
 
-return [
+$config = [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -33,3 +31,10 @@ return [
     ],
     'params' => $params,
 ];
+
+if (!YII_ENV_TEST && (YII_ENV === 'dev') && (YII_DEBUG === true) ) {
+    $config['bootstrap'][] = 'gii';
+    $config['modules']['gii'] = 'yii\gii\Module';
+}
+
+return $config;

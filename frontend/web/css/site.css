@@ -118,3 +118,12 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+
+/**
+ * Yii2 Member's System added below
+ */
+.field-signupform-sponsor #staticSponsor {
+    border: 0;
+    padding: 0 0 0 10px;
+}

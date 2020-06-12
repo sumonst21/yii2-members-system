@@ -15,10 +15,13 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.6.0",
+        "dmstr/yii2-adminlte-asset": "^2.1",
+        "kartik-v/yii2-export": "@dev",
+        "vlucas/phpdotenv": "^4.1",
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "vlucas/phpdotenv": "^4.1"
+        "yiisoft/yii2-bootstrap4": "^2.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -35,12 +38,28 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
-        }
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
     },
     "repositories": [
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "autoload": {
+        "files": [
+            "common/functions.php"
+        ]
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php yii generate/keys"
+        ]
+    }
 }

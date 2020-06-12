@@ -1,19 +1,23 @@
 <?php
 namespace frontend\controllers;
 
-use frontend\models\ResendVerificationEmailForm;
-use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
+use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\BadRequestHttpException;
+
+use common\models\User;
+
+use frontend\models\ContactForm;
+use frontend\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
+use frontend\models\ResendVerificationEmailForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use frontend\models\VerifyEmailForm;
 
 /**
  * Site controller
@@ -28,15 +32,12 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['login', 'signup', 'request-password-reset', 'reset-password', 'verify-email', 'resend-verification-email', 'error'],
                         'allow' => true,
-                        'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -46,8 +47,10 @@ class SiteController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
+                    'delete' => ['post'],
                 ],
             ],
+
         ];
     }
 
@@ -84,20 +87,21 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
+        if ( ! Yii::$app->user->isGuest ) {
             return $this->goHome();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
+        $this->layout = '//no-sidebar';
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+        $model = new LoginForm();
+
+        if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
+            return $this->goBack();
         }
+
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -107,7 +111,9 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        if (Yii::$app->user->logout()) {
+            Yii::$app->session->setFlash('success', 'You have been logged out!');
+        }
 
         return $this->goHome();
     }
@@ -120,46 +126,86 @@ class SiteController extends Controller
     public function actionContact()
     {
         $model = new ContactForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+            if ($model->sendEmail(Yii::$app->params['contactEmail'])) {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
             } else {
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
 
             return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
         }
-    }
 
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
+        return $this->render('contact', [
+            'model' => $model,
+        ]);
     }
 
     /**
      * Signs user up.
      *
+     * @todo Affiliate module here
      * @return mixed
      */
-    public function actionSignup()
+    public function actionSignup($aff = null)
     {
+        $this->layout = '//no-sidebar';
+
+        $sponsor = null;
+
+        if ( $aff ) {
+            // Sponsor forced in the URL
+            $sponsor = User::findByUsername($aff);
+
+            if ( $sponsor) {
+                // sponsor passed by aff param was a valid account.
+                // Handle like an affiliate link and set a cookie
+                Yii::$app->affiliate->setCookie($sponsor->username);
+            }
+        }
+
+        // aff param not passed, or it was for an invalid user
+        // so see if we have a cookie to fall back on
+        if ( ! $sponsor && ($cookie = Yii::$app->affiliate->getCookie())) {
+            $sponsor = User::findByUsername($cookie);
+        }
+
+        // if we STILL don't have a sponsor, then assign one (if config allows)
+        if ( ! $sponsor )
+        {
+            if ( Yii::$app->affiliate->randomizeOnSignupPage === true ) {
+                // Pick a random user from the database to be their sponsor
+                $sponsor = Yii::$app->affiliate->getRandomUser();
+            } elseif ( Yii::$app->affiliate->fallbackOnSignupPage === true ) {
+                if ( isset(Yii::$app->affiliate->fallbackSponsor) && ! empty(Yii::$app->affiliate->fallbackSponsor) && is_string(Yii::$app->affiliate->fallbackSponsor) ) {
+                    // Find the fallback (default) sponsor
+                    $sponsor = Yii::$app->affiliate->getFallbackSponsor();
+                }
+            }
+
+            // if we assigned a sponsor then store the cookie (if config allows)
+            if ( $sponsor && (Yii::$app->affiliate->storeCookieOnSignupPage === true) ) {
+                Yii::$app->affiliate->setCookie($sponsor->username);
+            }
+        }
+
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+
+        if ($model->load(Yii::$app->request->post()) && $model->signup())
+        {
+            if ( Yii::$app->params['signupValidation'] === true ) {
+                Yii::$app->session->setFlash('success', 'Your account has been created!<br>Before you can login, you must click the verification link in your email.');
+            } else {
+                Yii::$app->session->setFlash('success', 'Your account has been created!');
+            }
+
             return $this->goHome();
         }
 
         return $this->render('signup', [
             'model' => $model,
+            'sponsor' => $sponsor
         ]);
     }
 
@@ -170,9 +216,13 @@ class SiteController extends Controller
      */
     public function actionRequestPasswordReset()
     {
+        $this->layout = '//no-sidebar';
+
         $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if ($model->sendEmail())
+            {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
                 return $this->goHome();
@@ -195,6 +245,8 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
+        $this->layout = '//no-sidebar';
+
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidArgumentException $e) {
@@ -202,7 +254,7 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
+            Yii::$app->session->setFlash('success', 'Your password has been reset!');
 
             return $this->goHome();
         }
@@ -226,6 +278,7 @@ class SiteController extends Controller
         } catch (InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
+
         if ($user = $model->verifyEmail()) {
             if (Yii::$app->user->login($user)) {
                 Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
@@ -244,13 +297,17 @@ class SiteController extends Controller
      */
     public function actionResendVerificationEmail()
     {
+        $this->layout = '//no-sidebar';
+
         $model = new ResendVerificationEmailForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 return $this->goHome();
             }
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
+
+            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend a verification email for the provided email address.');
         }
 
         return $this->render('resendVerificationEmail', [

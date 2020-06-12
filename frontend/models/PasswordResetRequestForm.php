@@ -3,6 +3,7 @@ namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
+
 use common\models\User;
 
 /**
@@ -10,8 +11,10 @@ use common\models\User;
  */
 class PasswordResetRequestForm extends Model
 {
+    /**
+     * @var string
+     */
     public $email;
-
 
     /**
      * {@inheritdoc}
@@ -46,7 +49,7 @@ class PasswordResetRequestForm extends Model
         if (!$user) {
             return false;
         }
-        
+
         if (!User::isPasswordResetTokenValid($user->password_reset_token)) {
             $user->generatePasswordResetToken();
             if (!$user->save()) {
@@ -60,7 +63,6 @@ class PasswordResetRequestForm extends Model
                 ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
                 ['user' => $user]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
             ->setSubject('Password reset for ' . Yii::$app->name)
             ->send();

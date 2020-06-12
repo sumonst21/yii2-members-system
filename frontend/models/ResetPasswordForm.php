@@ -11,12 +11,12 @@ use common\models\User;
 class ResetPasswordForm extends Model
 {
     public $password;
+    public $confirmPassword;
 
     /**
      * @var \common\models\User
      */
     private $_user;
-
 
     /**
      * Creates a form model given a token.
@@ -30,10 +30,13 @@ class ResetPasswordForm extends Model
         if (empty($token) || !is_string($token)) {
             throw new InvalidArgumentException('Password reset token cannot be blank.');
         }
+
         $this->_user = User::findByPasswordResetToken($token);
+
         if (!$this->_user) {
             throw new InvalidArgumentException('Wrong password reset token.');
         }
+
         parent::__construct($config);
     }
 
@@ -45,6 +48,9 @@ class ResetPasswordForm extends Model
         return [
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+            ['confirmPassword', 'required'],
+            ['confirmPassword', 'compare', 'compareAttribute' => 'password', 'message' => 'Passwords do not match'],
+            ['confirmPassword', 'string', 'min' => 6],
         ];
     }
 

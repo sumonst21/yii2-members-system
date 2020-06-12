@@ -1,19 +1,20 @@
 <?php
-
-
 namespace frontend\models;
 
 use Yii;
-use common\models\User;
 use yii\base\Model;
 
+use common\models\User;
+
+/**
+ * Resend verification email form
+ */
 class ResendVerificationEmailForm extends Model
 {
     /**
      * @var string
      */
     public $email;
-
 
     /**
      * {@inheritdoc}
@@ -54,7 +55,6 @@ class ResendVerificationEmailForm extends Model
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
                 ['user' => $user]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
             ->setSubject('Account registration at ' . Yii::$app->name)
             ->send();
